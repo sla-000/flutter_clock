@@ -4,9 +4,13 @@
 
 import 'dart:async';
 
-import 'package:flutter_clock_helper/model.dart';
+import 'package:digital_clock/assets.dart';
+import 'package:digital_clock/petri_dish.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_clock_helper/model.dart';
+import 'package:logging/logging.dart';
+
+final Logger _log = Logger('DigitalClock')..level = Level.FINEST;
 
 enum _Element {
   background,
@@ -15,7 +19,7 @@ enum _Element {
 }
 
 final _lightTheme = {
-  _Element.background: Color(0xFF81B3FE),
+  _Element.background: Colors.black54,
   _Element.text: Colors.white,
   _Element.shadow: Colors.black,
 };
@@ -23,7 +27,7 @@ final _lightTheme = {
 final _darkTheme = {
   _Element.background: Colors.black,
   _Element.text: Colors.white,
-  _Element.shadow: Color(0xFF174EA6),
+  _Element.shadow: Colors.transparent,
 };
 
 /// A basic digital clock.
@@ -41,13 +45,38 @@ class DigitalClock extends StatefulWidget {
 class _DigitalClockState extends State<DigitalClock> {
   DateTime _dateTime = DateTime.now();
   Timer _timer;
+  final ValueNotifier<int> _H_Notifier = ValueNotifier<int>(0);
+  final ValueNotifier<int> _h_Notifier = ValueNotifier<int>(0);
+  final ValueNotifier<int> _M_Notifier = ValueNotifier<int>(0);
+  final ValueNotifier<int> _m_Notifier = ValueNotifier<int>(0);
 
   @override
   void initState() {
     super.initState();
+
+    _loggerInit();
+
     widget.model.addListener(_updateModel);
     _updateTime();
     _updateModel();
+
+    Future<void>(() {
+      load();
+    });
+  }
+
+  void _loggerInit() {
+    Logger.root.onRecord.listen((LogRecord rec) {
+      debugPrint(
+          '${rec.time.minute.toString().padLeft(2, '0')}:'
+          '${rec.time.second.toString().padLeft(2, '0')}.'
+          '${rec.time.millisecond.toString().padLeft(3, '0')} > ${rec.loggerName}/${rec.level.name}: ${rec.message}'
+          '${rec.error == null ? "" : "\n\terror=${rec.error}"}'
+          '${rec.stackTrace == null ? "" : "\n\tstacktrace=${rec.stackTrace}"}',
+          wrapWidth: 700);
+    });
+
+    hierarchicalLoggingEnabled = true;
   }
 
   @override
@@ -64,6 +93,12 @@ class _DigitalClockState extends State<DigitalClock> {
     _timer?.cancel();
     widget.model.removeListener(_updateModel);
     widget.model.dispose();
+
+    _H_Notifier.dispose();
+    _h_Notifier.dispose();
+    _M_Notifier.dispose();
+    _m_Notifier.dispose();
+
     super.dispose();
   }
 
@@ -74,23 +109,21 @@ class _DigitalClockState extends State<DigitalClock> {
   }
 
   void _updateTime() {
-    setState(() {
-      _dateTime = DateTime.now();
-      // Update once per minute. If you want to update every second, use the
-      // following code.
-      _timer = Timer(
-        Duration(minutes: 1) -
-            Duration(seconds: _dateTime.second) -
-            Duration(milliseconds: _dateTime.millisecond),
-        _updateTime,
-      );
-      // Update once per second, but make sure to do it at the beginning of each
-      // new second, so that the clock is accurate.
-      // _timer = Timer(
-      //   Duration(seconds: 1) - Duration(milliseconds: _dateTime.millisecond),
-      //   _updateTime,
-      // );
-    });
+    _dateTime = DateTime.now();
+
+    _log.finest(() => '_updateTime: _dateTime=$_dateTime');
+
+    _H_Notifier.value = (_dateTime.hour / 10).floor();
+    _h_Notifier.value = (_dateTime.hour % 10).floor();
+    _M_Notifier.value = (_dateTime.minute / 10).floor();
+    _m_Notifier.value = (_dateTime.minute % 10).floor();
+
+    _timer = Timer(
+      Duration(minutes: 1) -
+          Duration(seconds: _dateTime.second) -
+          Duration(milliseconds: _dateTime.millisecond),
+      _updateTime,
+    );
   }
 
   @override
@@ -98,36 +131,37 @@ class _DigitalClockState extends State<DigitalClock> {
     final colors = Theme.of(context).brightness == Brightness.light
         ? _lightTheme
         : _darkTheme;
-    final hour =
-        DateFormat(widget.model.is24HourFormat ? 'HH' : 'hh').format(_dateTime);
-    final minute = DateFormat('mm').format(_dateTime);
-    final fontSize = MediaQuery.of(context).size.width / 3.5;
-    final offset = -fontSize / 7;
-    final defaultStyle = TextStyle(
-      color: colors[_Element.text],
-      fontFamily: 'PressStart2P',
-      fontSize: fontSize,
-      shadows: [
-        Shadow(
-          blurRadius: 0,
-          color: colors[_Element.shadow],
-          offset: Offset(10, 0),
-        ),
-      ],
-    );
 
     return Container(
       color: colors[_Element.background],
-      child: Center(
-        child: DefaultTextStyle(
-          style: defaultStyle,
-          child: Stack(
-            children: <Widget>[
-              Positioned(left: offset, top: 0, child: Text(hour)),
-              Positioned(right: offset, bottom: offset, child: Text(minute)),
-            ],
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: PetriDish(
+              valueNotifier: _H_Notifier,
+              key: const ValueKey<String>('H'),
+            ),
           ),
-        ),
+          Expanded(
+            child: PetriDish(
+              valueNotifier: _h_Notifier,
+              key: const ValueKey<String>('h'),
+            ),
+          ),
+          Expanded(
+            child: PetriDish(
+              valueNotifier: _M_Notifier,
+              key: const ValueKey<String>('M'),
+            ),
+          ),
+          Expanded(
+            child: PetriDish(
+              valueNotifier: _m_Notifier,
+              key: const ValueKey<String>('m'),
+            ),
+          ),
+        ],
       ),
     );
   }
