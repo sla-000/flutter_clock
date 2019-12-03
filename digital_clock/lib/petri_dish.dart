@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:logging/logging.dart';
 
 import 'assets.dart' as assets;
@@ -20,6 +21,8 @@ class PetriDish extends StatefulWidget {
 }
 
 class _PetriDishState extends State<PetriDish> {
+  int _frameCallbackId;
+
   @override
   void initState() {
     super.initState();
@@ -27,8 +30,10 @@ class _PetriDishState extends State<PetriDish> {
 
     widget.valueNotifier.addListener(() {
       _log.finest(() =>
-          'initState: key=${widget.key}, value=${widget.valueNotifier.value}');
+      'initState: key=${widget.key}, value=${widget.valueNotifier.value}');
     });
+
+//    _scheduleTick();
   }
 
   @override
@@ -54,90 +59,71 @@ class _PetriDishState extends State<PetriDish> {
       ),
     );
   }
+
+  void _scheduleTick() {
+    _frameCallbackId = SchedulerBinding.instance.scheduleFrameCallback(_tick);
+  }
+
+  void _unscheduleTick() {
+    SchedulerBinding.instance.cancelFrameCallbackWithId(_frameCallbackId);
+  }
+
+  void _tick(Duration timestamp) {
+    if (!mounted) {
+      return;
+    }
+    _scheduleTick();
+    _update(timestamp);
+
+    setState(() {});
+  }
+
+  void _update(Duration timestamp) {}
 }
 
 class PetriPainter extends CustomPainter {
+  int lastMillis;
+
   @override
   void paint(Canvas canvas, Size size) {
-    _log.finest(() => 'paint: size=$size');
+//    _log.finest(() => 'paint: size=$size');
+
+    int delta = 0;
+
+    final int currentMillis = DateTime
+        .now()
+        .toUtc()
+        .millisecondsSinceEpoch;
+    if (lastMillis != null) {
+      delta = currentMillis - lastMillis;
+    }
+    lastMillis = currentMillis;
 
     canvas.drawRect(
         const Rect.fromLTWH(3.0, 3.0, 500.0 - 6.0, 1000.0 - 6.0), Paint());
 
-    canvas.drawLine(
-      const Offset(0, 0),
-      const Offset(200, 0),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..color = Colors.grey,
-    );
-
-    canvas.drawLine(
-      const Offset(200, 0),
-      const Offset(200, 200),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..color = Colors.grey,
-    );
-
-    canvas.drawLine(
-      const Offset(200, 200),
-      const Offset(0, 200),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..color = Colors.grey,
-    );
-
-    canvas.drawLine(
-      const Offset(0, 0),
-      const Offset(0, 0),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..color = Colors.grey,
-    );
-
     _drawActor(
       canvas,
       assets.bodyImage,
-      const Offset(100.0, 200.0),
+      Offset(size.width / 2, size.height / 2),
       Paint()..color = Colors.white,
-      scale: const Size(1.0, 1.0),
-      rotation: 0.3,
-    );
-
-    _drawActor(
-      canvas,
-      assets.eyeImage,
-      const Offset(90.0, 190.0),
-      Paint()..color = Colors.white,
-      scale: const Size(1.0, 1.0),
-      rotation: 0.3,
-    );
-
-    _drawActor(
-      canvas,
-      assets.tailImage,
-      const Offset(150.0, 250.0),
-      Paint()
-        ..colorFilter = ColorFilter.mode(Colors.blue[200], BlendMode.modulate),
-      scale: const Size(1.0, 1.0),
-      rotation: 0.3,
+      scale: const Size(3.0, 3.0),
+      rotation: delta / 1000 * 0.1,
     );
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    return false; // todo Set to true to redraw every frame
+    return true;
   }
 
-  void _drawActor(
-    Canvas canvas,
-    ui.Image image,
-    Offset offset,
-    Paint paint, {
-    Size scale = const Size(1.0, 1.0),
-    double rotation = 0,
-  }) {
+  void _drawActor(Canvas canvas,
+      ui.Image image,
+      Offset offset,
+      Paint paint, {
+        Size scale = const Size(1.0, 1.0),
+        double rotation = 0,
+      }) {
     canvas.save();
 
     canvas.translate(offset.dx, offset.dy);
@@ -147,6 +133,47 @@ class PetriPainter extends CustomPainter {
     canvas.scale(scale.width, scale.height);
 
     canvas.drawImage(image, Offset(-image.width / 2, -image.height / 2), paint);
+
+    _drawTail(canvas);
+
+    _drawEye(canvas);
+
+    canvas.restore();
+  }
+
+  void _drawTail(Canvas canvas) {
+    canvas.save();
+
+    canvas.translate(40, 40);
+
+    canvas.rotate(0);
+
+    canvas.scale(1, 1);
+
+    canvas.drawImage(
+      assets.tailImage,
+      Offset(0, 0),
+      Paint()
+        ..colorFilter = ColorFilter.mode(Colors.green[600], BlendMode.modulate),
+    );
+
+    canvas.restore();
+  }
+
+  void _drawEye(Canvas canvas) {
+    canvas.save();
+
+    canvas.translate(-18, -18);
+
+    canvas.rotate(3.14 / 4);
+
+    canvas.scale(1, 1);
+
+    canvas.drawImage(
+      assets.eyeImage,
+      Offset(-assets.eyeImage.width / 2, -assets.eyeImage.height / 2),
+      Paint(),
+    );
 
     canvas.restore();
   }
