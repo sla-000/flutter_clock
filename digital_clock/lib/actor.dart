@@ -1,26 +1,129 @@
-class BodyPart<LookType> {
+import 'dart:ui' as ui;
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/painting.dart';
+
+import 'assets.dart' as assets;
+import 'config.dart';
+
+abstract class Update {
+  void update(Actor root, double millis);
+}
+
+abstract class Draw {
+  void draw(Canvas canvas);
+}
+
+abstract class Actor implements Update, Draw {
+  Actor({
+    @required this.name,
+    @required this.x,
+    @required this.y,
+    @required this.width,
+    @required this.height,
+    this.pivotX,
+    this.pivotY,
+    this.scaleX,
+    this.scaleY,
+    this.rotation,
+    this.colorFilter,
+    this.image,
+  })
+      : assert(name != null),
+        assert(x != null),
+        assert(y != null),
+        assert(width != null),
+        assert(height != null) {
+    pivotX ??= width / 2;
+    pivotY ??= height / 2;
+  }
+
+  String name;
   double x;
   double y;
   double width;
   double height;
-  double originX;
-  double originY;
-  double scaleX = 1;
-  double scaleY = 1;
+  double pivotX;
+  double pivotY;
+  double scaleX;
+  double scaleY;
   double rotation;
+  ColorFilter colorFilter;
+  ui.Image image;
 
-  List<LookType> look;
+  final List<Actor> children = <Actor>[];
+
+  @override
+  void update(Actor root, double millis);
+
+  @override
+  void draw(Canvas canvas) {
+    if (image == null) {
+      return;
+    }
+
+    canvas.save();
+
+    canvas.translate(x, y);
+
+    canvas.rotate(rotation ?? 0);
+
+    canvas.scale(scaleX ?? 1, scaleY ?? 1);
+
+    paintImage(
+      canvas: canvas,
+      rect: Rect.fromCenter(
+        center: Offset.zero,
+        width: width,
+        height: height,
+      ),
+      colorFilter: colorFilter,
+      filterQuality: Config.instance.filterQuality,
+      image: image,
+    );
+
+    for (final Actor actor in children) {
+      actor.draw(canvas);
+    }
+
+    canvas.restore();
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is Actor && runtimeType == other.runtimeType &&
+              name == other.name;
+
+  @override
+  int get hashCode => name.hashCode;
+
+  @override
+  String toString() {
+    return 'Actor{name: $name, x: $x, y: $y, width: $width, height: $height, '
+        'rotation: $rotation, children: $children}';
+  }
 }
 
-class Actor<LookType> {
-  double x;
-  double y;
+class Cell extends Actor {
+  Cell({
+    @required double x,
+    @required double y,
+    double rotation,
+  }) : super(
+    name: 'cell',
+    x: x,
+    y: y,
+    width: 50,
+    height: 50,
+    rotation: rotation,
+    image: assets.bodyImage,
+  );
 
-  List<BodyPart<LookType>> bodyParts;
+  @override
+  void update(Actor root, double millis) {
+    rotation ??= 0;
 
-  List<BodyPart<LookType>> getAllParts() {
-    final List<BodyPart<LookType>> rez = <BodyPart<LookType>>[];
-
-    return []; // todo
+    rotation += 2 * 3.1415 / 10 * (millis / 1000);
   }
 }
