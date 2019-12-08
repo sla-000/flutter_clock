@@ -135,7 +135,6 @@ class _DigitalClockState extends State<DigitalClock> {
     return Container(
       color: colors[_Element.background],
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Expanded(
             child: PetriDish(

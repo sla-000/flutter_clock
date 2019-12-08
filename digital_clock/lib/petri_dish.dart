@@ -52,23 +52,28 @@ class _PetriDishState extends State<PetriDish> {
         return AspectRatio(
           aspectRatio: 1 / 2,
           child: Padding(
-            padding: const EdgeInsets.all(2.0),
+            padding: const EdgeInsets.all(1.0),
             child: Container(
               color: Colors.black,
-              child: DrawingWidget(
-                key: widget.key,
-                scene: scene,
-                calculateFps: widget.calculateFps,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: DrawingWidget(
+                  key: widget.key,
+                  scene: scene,
+                  calculateFps: widget.calculateFps,
+                ),
               ),
             ),
           ),
         );
       },
-      child: FittedBox(
-        child: Container(
-          color: Colors.black,
-          width: 500,
-          height: 1000,
+      child: AspectRatio(
+        aspectRatio: 1 / 2,
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Container(
+            color: Colors.black,
+          ),
         ),
       ),
     );

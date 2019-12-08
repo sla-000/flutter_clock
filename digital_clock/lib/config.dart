@@ -5,5 +5,5 @@ class Config {
 
   static Config instance = Config._init();
 
-  FilterQuality filterQuality = FilterQuality.high;
+  FilterQuality filterQuality = FilterQuality.low;
 }

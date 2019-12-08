@@ -116,6 +116,8 @@ class Cell extends Actor {
     y: y,
     width: 50,
     height: 50,
+    scaleX: 1,
+    scaleY: 1,
     rotation: rotation,
     image: assets.bodyImage,
   );
