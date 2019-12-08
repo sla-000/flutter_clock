@@ -5,35 +5,39 @@ import 'package:logging/logging.dart';
 
 import 'actor.dart';
 import 'assets.dart' as assets;
+import 'delta.dart';
+import 'fps.dart';
 
 final Logger _log = Logger('PetriDish')..level = Level.FINEST;
-
-Cell cell;
 
 class PetriDish extends StatefulWidget {
   const PetriDish({
     @required this.valueNotifier,
+    this.calculateFps,
     Key key,
   }) : super(key: key);
 
   final ValueNotifier<int> valueNotifier;
+  final bool calculateFps;
 
   @override
   _PetriDishState createState() => _PetriDishState();
 }
 
 class _PetriDishState extends State<PetriDish> {
+  Actor scene;
+
   @override
   void initState() {
     super.initState();
     _log.finest(() => 'initState: key=${widget.key}');
 
+    scene = Cell(x: 100, y: 100);
+
     widget.valueNotifier.addListener(() {
       _log.finest(() =>
-      'initState: key=${widget.key}, value=${widget.valueNotifier.value}');
+      'valueNotifier: key=${widget.key}, value=${widget.valueNotifier.value}');
     });
-
-//    _scheduleTick();
   }
 
   @override
@@ -45,8 +49,6 @@ class _PetriDishState extends State<PetriDish> {
           return child;
         }
 
-        cell = Cell(x: 0, y: 0);
-
         return AspectRatio(
           aspectRatio: 1 / 2,
           child: Padding(
@@ -55,15 +57,19 @@ class _PetriDishState extends State<PetriDish> {
               color: Colors.black,
               child: DrawingWidget(
                 key: widget.key,
+                scene: scene,
+                calculateFps: widget.calculateFps,
               ),
             ),
           ),
         );
       },
-      child: Container(
-        color: Colors.black,
-        width: 50,
-        height: 100,
+      child: FittedBox(
+        child: Container(
+          color: Colors.black,
+          width: 500,
+          height: 1000,
+        ),
       ),
     );
   }
@@ -71,67 +77,92 @@ class _PetriDishState extends State<PetriDish> {
 
 class DrawingWidget extends StatefulWidget {
   const DrawingWidget({
+    this.calculateFps,
+    this.scene,
     Key key,
   }) : super(key: key);
+
+  final bool calculateFps;
+  final Actor scene;
 
   @override
   _DrawingWidgetState createState() => _DrawingWidgetState();
 }
 
-final StreamController<void> updateDisplay = StreamController<void>.broadcast();
-
 class _DrawingWidgetState extends State<DrawingWidget> {
   int lastMillis;
-  final List<double> averaging = <double>[];
-  int counter = 0;
+  Delta delta = Delta();
+  Fps fps;
+  double lastFps = 0;
+  Timer fpsDisplayTimer;
+  final StreamController<void> updateDisplay =
+  StreamController<void>.broadcast();
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.calculateFps ?? false) {
+      fps = Fps();
+
+      fpsDisplayTimer = Timer.periodic(Duration(seconds: 10), (_) {
+        debugPrint('fps=${lastFps.round()}');
+      });
+    }
+
+    updateDisplay.stream.listen((_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    if (fpsDisplayTimer != null) {
+      fpsDisplayTimer.cancel();
+    }
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<void>(
-        stream: updateDisplay.stream,
-        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-          final int millis = DateTime
-              .now()
-              .millisecondsSinceEpoch;
+    final int millis = DateTime
+        .now()
+        .millisecondsSinceEpoch;
 
-          lastMillis ??= millis;
-          final int delta = millis - lastMillis;
-          lastMillis = millis;
+    final int delta_ms = delta.calculate(millis);
 
-          averaging.add(delta.toDouble());
-          while (averaging.length > 10) {
-            averaging.removeAt(0);
-          }
+    if (widget.calculateFps ?? false) {
+      lastFps = fps.calculate(delta_ms);
+    }
 
-          final double averageDelay =
-              averaging.reduce((double a, double b) => a + b) /
-                  averaging.length;
-
-          if (counter++ >= 300) {
-            counter = 0;
-            debugPrint('averageDelay=$averageDelay');
-          }
-
-          return CustomPaint(
-            painter: PetriPainter(delta),
-            size: const Size(500, 1000),
-          );
-        });
+    return CustomPaint(
+      painter: PetriPainter(
+        scene: widget.scene,
+        delta: delta_ms,
+        updateDisplay: updateDisplay.sink,
+      ),
+      size: const Size(500, 1000),
+    );
   }
 }
 
 class PetriPainter extends CustomPainter {
-  PetriPainter(this.delta);
+  PetriPainter({
+    @required this.scene,
+    @required this.delta,
+    @required this.updateDisplay,
+  });
 
-  int delta;
+  final Actor scene;
+  final int delta;
+  final Sink<void> updateDisplay;
 
   @override
   void paint(Canvas canvas, Size size) {
 //    _log.finest(() => 'paint: size=$size');
-    cell.draw(canvas);
+    scene.draw(canvas);
 
     Future<void>(() {
-      cell.update(cell, delta.toDouble());
+      scene.update(scene, delta.toDouble());
 
       updateDisplay.add(null);
     });

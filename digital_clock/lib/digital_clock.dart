@@ -140,6 +140,7 @@ class _DigitalClockState extends State<DigitalClock> {
           Expanded(
             child: PetriDish(
               valueNotifier: _H_Notifier,
+              calculateFps: true,
               key: const ValueKey<String>('H'),
             ),
           ),

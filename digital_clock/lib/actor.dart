@@ -124,6 +124,6 @@ class Cell extends Actor {
   void update(Actor root, double millis) {
     rotation ??= 0;
 
-    rotation += 2 * 3.1415 / 10 * (millis / 1000);
+    rotation += 2 * 3.1415 * (millis / 1000);
   }
 }
