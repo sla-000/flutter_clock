@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 ui.Image bodyImage;
 ui.Image eyeImage;
 ui.Image tailImage;
+ui.Image mannaImage;
 
 const String _imagesRoot = 'assets/images';
 
@@ -16,6 +17,7 @@ Future<void> load() async {
   bodyImage = await _getImageFromFile('cell.png');
   eyeImage = await _getImageFromFile('eye.png');
   tailImage = await _getImageFromFile('tail.png');
+  mannaImage = await _getImageFromFile('manna.png');
 
   loaded.value = true;
 }

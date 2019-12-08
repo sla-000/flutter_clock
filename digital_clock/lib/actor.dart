@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -54,14 +55,15 @@ abstract class Actor implements Update, Draw {
   final List<Actor> children = <Actor>[];
 
   @override
-  void update(Actor root, double millis);
+  @mustCallSuper
+  void update(Actor root, double millis) {
+    for (final Actor actor in children) {
+      actor.update(root, millis);
+    }
+  }
 
   @override
   void draw(Canvas canvas) {
-    if (image == null) {
-      return;
-    }
-
     canvas.save();
 
     canvas.translate(x, y);
@@ -70,17 +72,19 @@ abstract class Actor implements Update, Draw {
 
     canvas.scale(scaleX ?? 1, scaleY ?? 1);
 
-    paintImage(
-      canvas: canvas,
-      rect: Rect.fromCenter(
-        center: Offset.zero,
-        width: width,
-        height: height,
-      ),
-      colorFilter: colorFilter,
-      filterQuality: Config.instance.filterQuality,
-      image: image,
-    );
+    if (image != null) {
+      paintImage(
+        canvas: canvas,
+        rect: Rect.fromCenter(
+          center: Offset.zero,
+          width: width,
+          height: height,
+        ),
+        colorFilter: colorFilter,
+        filterQuality: Config.instance.filterQuality,
+        image: image,
+      );
+    }
 
     for (final Actor actor in children) {
       actor.draw(canvas);
@@ -107,17 +111,20 @@ abstract class Actor implements Update, Draw {
 
 class Cell extends Actor {
   Cell({
+    @required String name,
     @required double x,
     @required double y,
+    double scaleX,
+    double scaleY,
     double rotation,
   }) : super(
-    name: 'cell',
+    name: 'cell-$name',
     x: x,
     y: y,
     width: 50,
     height: 50,
-    scaleX: 1,
-    scaleY: 1,
+    scaleX: scaleX,
+    scaleY: scaleY,
     rotation: rotation,
     image: assets.bodyImage,
   );
@@ -127,5 +134,56 @@ class Cell extends Actor {
     rotation ??= 0;
 
     rotation += 2 * 3.1415 * (millis / 1000);
+
+    super.update(root, millis);
   }
+}
+
+class Scene extends Actor {
+  Scene({
+    @required String name,
+  }) : super(
+    name: 'scene-$name',
+    x: 0,
+    y: 0,
+    width: 500,
+    height: 1000,
+    image: null,
+  ) {
+    for (int q = 100; q <= 900; q += 100) {
+      children.add(Manna(
+        name: '$q',
+        x: 250,
+        y: q.toDouble(),
+      ));
+    }
+
+    for (int q = 0; q < 10; ++q) {
+      final double scale = Random.secure().nextDouble() * 2 + 0.2;
+
+      children.add(Cell(
+        name: '$q',
+        x: Random.secure().nextInt(500).toDouble(),
+        y: Random.secure().nextInt(1000).toDouble(),
+        scaleX: scale,
+        scaleY: scale,
+        rotation: Random.secure().nextDouble() * 2 * 3.14,
+      ));
+    }
+  }
+}
+
+class Manna extends Actor {
+  Manna({
+    @required String name,
+    @required double x,
+    @required double y,
+  }) : super(
+    name: 'manna-$name',
+    x: x,
+    y: y,
+    width: 10,
+    height: 10,
+    image: assets.mannaImage,
+  );
 }
