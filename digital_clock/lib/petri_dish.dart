@@ -32,8 +32,6 @@ class _PetriDishState extends State<PetriDish> {
     super.initState();
     _log.finest(() => 'initState: key=${widget.key}');
 
-    scene = Cell(x: 100, y: 100);
-
     widget.valueNotifier.addListener(() {
       _log.finest(() =>
       'valueNotifier: key=${widget.key}, value=${widget.valueNotifier.value}');
@@ -48,6 +46,8 @@ class _PetriDishState extends State<PetriDish> {
         if (!loaded) {
           return child;
         }
+
+        scene = Cell(x: 100, y: 100);
 
         return AspectRatio(
           aspectRatio: 1 / 2,
