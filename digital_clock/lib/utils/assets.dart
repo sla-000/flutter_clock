@@ -11,7 +11,7 @@ class Assets {
 
   ui.Image bodyImage;
   ui.Image eyeImage;
-  ui.Image tailImage;
+  List<ui.Image> tailImages = <ui.Image>[];
   ui.Image mannaImage;
 
   ValueNotifier<bool> loaded = ValueNotifier<bool>(false);
@@ -21,7 +21,11 @@ class Assets {
   Future<void> load() async {
     bodyImage = await _getImageFromFile('cell.png');
     eyeImage = await _getImageFromFile('eye.png');
-    tailImage = await _getImageFromFile('tail.png');
+
+    tailImages.add(await _getImageFromFile('tail1.png'));
+    tailImages.add(await _getImageFromFile('tail0.png'));
+    tailImages.add(await _getImageFromFile('tail2.png'));
+
     mannaImage = await _getImageFromFile('manna.png');
 
     loaded.value = true;

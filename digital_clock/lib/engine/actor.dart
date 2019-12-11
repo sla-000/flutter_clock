@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -25,6 +26,7 @@ abstract class Actor implements Update, Draw {
     this.scaleX,
     this.scaleY,
     this.rotation,
+    this.velocity,
     this.colorFilter,
     this.image,
   })  : assert(name != null),
@@ -46,6 +48,7 @@ abstract class Actor implements Update, Draw {
   double scaleX;
   double scaleY;
   double rotation;
+  double velocity;
   ColorFilter colorFilter;
   ui.Image image;
 
@@ -54,6 +57,13 @@ abstract class Actor implements Update, Draw {
   @override
   @mustCallSuper
   void update(Actor root, double millis) {
+    velocity ??= 0;
+
+    if (velocity != 0) {
+      x += velocity * math.cos(rotation) * millis / 1000;
+      y += velocity * math.sin(rotation) * millis / 1000;
+    }
+
     for (final Actor actor in children) {
       actor.update(root, millis);
     }

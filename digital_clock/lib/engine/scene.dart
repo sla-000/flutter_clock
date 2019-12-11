@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 
@@ -25,17 +25,68 @@ class Scene extends Actor {
       ));
     }
 
-    for (int q = 0; q < 10; ++q) {
-      final double scale = Random.secure().nextDouble() * 2 + 0.2;
+    for (double q = 100; q <= 400; q += 100) {
+      final double scale = math.Random.secure().nextDouble() * 2 + 0.2;
 
-      children.add(Cell(
-        name: '$q',
-        x: Random.secure().nextInt(500).toDouble(),
-        y: Random.secure().nextInt(1000).toDouble(),
-        scaleX: scale,
-        scaleY: scale,
-        rotation: Random.secure().nextDouble() * 2 * 3.14,
-      ));
+      children.add(
+        Cell(
+          name: 'top-$q',
+          x: q,
+          y: 100,
+          scaleX: scale,
+          scaleY: scale,
+          rotation: math.Random.secure().nextDouble() * 2 * math.pi,
+          velocity: math.Random.secure().nextDouble() * 10 + 1,
+        ),
+      );
+    }
+
+    for (double q = 100; q <= 400; q += 100) {
+      final double scale = math.Random.secure().nextDouble() * 1 + 0.2;
+
+      children.add(
+        Cell(
+          name: 'bottom-$q',
+          x: q,
+          y: 900,
+          scaleX: scale,
+          scaleY: scale,
+          rotation: math.Random.secure().nextDouble() * 2 * math.pi,
+          velocity: math.Random.secure().nextDouble() * 10 + 1,
+        ),
+      );
+    }
+
+    for (double q = 200; q <= 800; q += 100) {
+      final double scale = math.Random.secure().nextDouble() * 1 + 0.2;
+
+      children.add(
+        Cell(
+          name: 'left-$q',
+          x: 100,
+          y: q,
+          scaleX: scale,
+          scaleY: scale,
+          rotation: math.Random.secure().nextDouble() * 2 * math.pi,
+          velocity: math.Random.secure().nextDouble() * 10 + 1,
+        ),
+      );
+    }
+
+    for (double q = 200; q <= 800; q += 100) {
+      final double scale = math.Random.secure().nextDouble() * 1 + 0.2;
+
+      children.add(
+        Cell(
+          name: 'right-$q',
+          x: 400,
+          y: q,
+          scaleX: scale,
+          scaleY: scale,
+          rotation: math.Random.secure().nextDouble() * 2 * math.pi,
+          velocity: math.Random.secure().nextDouble() * 10 + 1,
+        ),
+      );
     }
   }
 }
