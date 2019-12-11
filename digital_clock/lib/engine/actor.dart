@@ -4,8 +4,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
-import 'assets.dart' as assets;
-import 'config.dart';
+import '../assets.dart' as assets;
+import '../config.dart';
 
 abstract class Update {
   void update(Actor root, double millis);
@@ -29,8 +29,7 @@ abstract class Actor implements Update, Draw {
     this.rotation,
     this.colorFilter,
     this.image,
-  })
-      : assert(name != null),
+  })  : assert(name != null),
         assert(x != null),
         assert(y != null),
         assert(width != null),
@@ -96,8 +95,7 @@ abstract class Actor implements Update, Draw {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is Actor && runtimeType == other.runtimeType &&
-              name == other.name;
+      other is Actor && runtimeType == other.runtimeType && name == other.name;
 
   @override
   int get hashCode => name.hashCode;
@@ -118,16 +116,16 @@ class Cell extends Actor {
     double scaleY,
     double rotation,
   }) : super(
-    name: 'cell-$name',
-    x: x,
-    y: y,
-    width: 50,
-    height: 50,
-    scaleX: scaleX,
-    scaleY: scaleY,
-    rotation: rotation,
-    image: assets.bodyImage,
-  );
+          name: 'cell-$name',
+          x: x,
+          y: y,
+          width: 50,
+          height: 50,
+          scaleX: scaleX,
+          scaleY: scaleY,
+          rotation: rotation,
+          image: assets.bodyImage,
+        );
 
   @override
   void update(Actor root, double millis) {
@@ -143,13 +141,13 @@ class Scene extends Actor {
   Scene({
     @required String name,
   }) : super(
-    name: 'scene-$name',
-    x: 0,
-    y: 0,
-    width: 500,
-    height: 1000,
-    image: null,
-  ) {
+          name: 'scene-$name',
+          x: 0,
+          y: 0,
+          width: 500,
+          height: 1000,
+          image: null,
+        ) {
     for (int q = 100; q <= 900; q += 100) {
       children.add(Manna(
         name: '$q',
@@ -179,11 +177,11 @@ class Manna extends Actor {
     @required double x,
     @required double y,
   }) : super(
-    name: 'manna-$name',
-    x: x,
-    y: y,
-    width: 10,
-    height: 10,
-    image: assets.mannaImage,
-  );
+          name: 'manna-$name',
+          x: x,
+          y: y,
+          width: 10,
+          height: 10,
+          image: assets.mannaImage,
+        );
 }

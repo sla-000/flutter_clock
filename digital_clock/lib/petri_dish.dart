@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
-import 'actor.dart';
 import 'assets.dart' as assets;
-import 'delta.dart';
-import 'fps.dart';
+import 'engine/actor.dart';
+import 'utils/delta.dart';
+import 'utils/fps.dart';
 
 final Logger _log = Logger('PetriDish')..level = Level.FINEST;
 
@@ -34,7 +34,7 @@ class _PetriDishState extends State<PetriDish> {
 
     widget.valueNotifier.addListener(() {
       _log.finest(() =>
-      'valueNotifier: key=${widget.key}, value=${widget.valueNotifier.value}');
+          'valueNotifier: key=${widget.key}, value=${widget.valueNotifier.value}');
     });
   }
 
@@ -101,7 +101,7 @@ class _DrawingWidgetState extends State<DrawingWidget> {
   double lastFps = 0;
   Timer fpsDisplayTimer;
   final StreamController<void> updateDisplay =
-  StreamController<void>.broadcast();
+      StreamController<void>.broadcast();
 
   @override
   void initState() {
@@ -129,9 +129,7 @@ class _DrawingWidgetState extends State<DrawingWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final int millis = DateTime
-        .now()
-        .millisecondsSinceEpoch;
+    final int millis = DateTime.now().millisecondsSinceEpoch;
 
     final int delta_ms = delta.calculate(millis);
 
