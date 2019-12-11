@@ -1,9 +1,11 @@
+const int _kAveragingLength = 30;
+
 class Fps {
   final List<double> _averaging = <double>[];
 
   double calculate(int delta) {
     _averaging.add(delta.toDouble());
-    while (_averaging.length > 10) {
+    while (_averaging.length > _kAveragingLength) {
       _averaging.removeAt(0);
     }
 

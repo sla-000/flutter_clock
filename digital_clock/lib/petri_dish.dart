@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
-import 'assets.dart' as assets;
 import 'engine/actor.dart';
+import 'engine/scene.dart';
+import 'utils/assets.dart';
 import 'utils/delta.dart';
 import 'utils/fps.dart';
 
@@ -41,26 +42,28 @@ class _PetriDishState extends State<PetriDish> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
-      valueListenable: assets.loaded,
+      valueListenable: Assets.instance.loaded,
       builder: (BuildContext context, bool loaded, Widget child) {
         if (!loaded) {
           return child;
         }
 
-        scene = Scene();
+        scene ??= Scene(name: 'life');
 
         return AspectRatio(
           aspectRatio: 1 / 2,
           child: Padding(
             padding: const EdgeInsets.all(1.0),
-            child: Container(
-              color: Colors.black,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: DrawingWidget(
-                  key: widget.key,
-                  scene: scene,
-                  calculateFps: widget.calculateFps,
+            child: ClipRect(
+              child: Container(
+                color: Colors.black,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: DrawingWidget(
+                    key: widget.key,
+                    scene: scene,
+                    calculateFps: widget.calculateFps,
+                  ),
                 ),
               ),
             ),

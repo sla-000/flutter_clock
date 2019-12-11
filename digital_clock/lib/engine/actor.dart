@@ -1,10 +1,8 @@
-import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
-import '../assets.dart' as assets;
 import '../config.dart';
 
 abstract class Update {
@@ -105,83 +103,4 @@ abstract class Actor implements Update, Draw {
     return 'Actor{name: $name, x: $x, y: $y, width: $width, height: $height, '
         'rotation: $rotation, children: $children}';
   }
-}
-
-class Cell extends Actor {
-  Cell({
-    @required String name,
-    @required double x,
-    @required double y,
-    double scaleX,
-    double scaleY,
-    double rotation,
-  }) : super(
-          name: 'cell-$name',
-          x: x,
-          y: y,
-          width: 50,
-          height: 50,
-          scaleX: scaleX,
-          scaleY: scaleY,
-          rotation: rotation,
-          image: assets.bodyImage,
-        );
-
-  @override
-  void update(Actor root, double millis) {
-    rotation ??= 0;
-
-    rotation += 2 * 3.1415 * (millis / 1000);
-
-    super.update(root, millis);
-  }
-}
-
-class Scene extends Actor {
-  Scene({
-    @required String name,
-  }) : super(
-          name: 'scene-$name',
-          x: 0,
-          y: 0,
-          width: 500,
-          height: 1000,
-          image: null,
-        ) {
-    for (int q = 100; q <= 900; q += 100) {
-      children.add(Manna(
-        name: '$q',
-        x: 250,
-        y: q.toDouble(),
-      ));
-    }
-
-    for (int q = 0; q < 10; ++q) {
-      final double scale = Random.secure().nextDouble() * 2 + 0.2;
-
-      children.add(Cell(
-        name: '$q',
-        x: Random.secure().nextInt(500).toDouble(),
-        y: Random.secure().nextInt(1000).toDouble(),
-        scaleX: scale,
-        scaleY: scale,
-        rotation: Random.secure().nextDouble() * 2 * 3.14,
-      ));
-    }
-  }
-}
-
-class Manna extends Actor {
-  Manna({
-    @required String name,
-    @required double x,
-    @required double y,
-  }) : super(
-          name: 'manna-$name',
-          x: x,
-          y: y,
-          width: 10,
-          height: 10,
-          image: assets.mannaImage,
-        );
 }

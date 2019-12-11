@@ -4,8 +4,8 @@
 
 import 'dart:async';
 
-import 'package:digital_clock/assets.dart';
 import 'package:digital_clock/petri_dish.dart';
+import 'package:digital_clock/utils/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:logging/logging.dart';
@@ -61,7 +61,7 @@ class _DigitalClockState extends State<DigitalClock> {
     _updateModel();
 
     Future<void>(() {
-      load();
+      Assets.instance.load();
     });
   }
 
