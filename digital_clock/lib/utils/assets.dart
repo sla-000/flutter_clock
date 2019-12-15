@@ -22,9 +22,9 @@ class Assets {
     bodyImage = await _getImageFromFile('cell.png');
     eyeImage = await _getImageFromFile('eye.png');
 
-    tailImages.add(await _getImageFromFile('tail1.png'));
-    tailImages.add(await _getImageFromFile('tail0.png'));
-    tailImages.add(await _getImageFromFile('tail2.png'));
+    for (int q = 0; q < 10; ++q) {
+      tailImages.add(await _getImageFromFile('tail$q.png'));
+    }
 
     mannaImage = await _getImageFromFile('manna.png');
 

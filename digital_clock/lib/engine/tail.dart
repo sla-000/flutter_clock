@@ -16,35 +16,23 @@ class Tail extends Actor {
           name: 'tail-$name',
           x: x,
           y: y,
-          width: 8,
-          height: 8,
+          width: 6,
+          height: 6,
           scaleX: scaleX,
           scaleY: scaleY,
           colorFilter: ColorFilter.mode(Colors.green, BlendMode.modulate),
           image: Assets.instance.tailImages[0],
         );
 
-  bool _up = true;
   int _index = 0;
 
   @override
   void update(Actor root, double millis) {
+    final int framesPassed = (millis / 16).round();
     image = Assets.instance.tailImages[_index];
-
-    if (_up) {
-      if (_index >= Assets.instance.tailImages.length - 1) {
-        --_index;
-        _up = false;
-      } else {
-        ++_index;
-      }
-    } else {
-      if (_index <= 0) {
-        ++_index;
-        _up = true;
-      } else {
-        --_index;
-      }
+    _index += framesPassed;
+    if (_index >= Assets.instance.tailImages.length) {
+      _index = 0;
     }
 
     super.update(root, millis);

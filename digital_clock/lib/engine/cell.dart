@@ -18,30 +18,37 @@ class Cell extends Actor {
           name: 'cell-$name',
           x: x,
           y: y,
-          width: 50,
-          height: 50,
+          width: 40,
+          height: 40,
           scaleX: scaleX,
           scaleY: scaleY,
           rotation: rotation,
           velocity: velocity,
           image: Assets.instance.bodyImage,
         ) {
-    children.add(Eye(
+    tail = Tail(
       name: name,
-      x: 10,
+      x: -22,
       y: 0,
+      scaleX: scaleX,
       scaleY: scaleY,
-      scaleX: scaleY,
-    ));
+    );
+    children.add(tail);
 
-    children.add(Tail(
+    eye = Eye(
       name: name,
-      x: -32,
+      x: 8,
       y: 0,
-      scaleY: scaleY,
-      scaleX: scaleY,
-    ));
+      scaleX: 1.2 / scaleX + 0.8,
+      scaleY: 1.2 / scaleY + 0.8,
+    );
+
+    children.add(eye);
   }
+
+  Actor eye;
+
+  Actor tail;
 
   @override
   void update(Actor root, double millis) {

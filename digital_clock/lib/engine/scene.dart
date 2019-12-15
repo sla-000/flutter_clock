@@ -26,7 +26,7 @@ class Scene extends Actor {
     }
 
     for (double q = 100; q <= 400; q += 100) {
-      final double scale = math.Random.secure().nextDouble() * 2 + 0.2;
+      final double scale = math.Random.secure().nextDouble() * 1 + 1;
 
       children.add(
         Cell(
@@ -42,7 +42,7 @@ class Scene extends Actor {
     }
 
     for (double q = 100; q <= 400; q += 100) {
-      final double scale = math.Random.secure().nextDouble() * 1 + 0.2;
+      final double scale = math.Random.secure().nextDouble() * 1 + 1;
 
       children.add(
         Cell(
@@ -58,7 +58,7 @@ class Scene extends Actor {
     }
 
     for (double q = 200; q <= 800; q += 100) {
-      final double scale = math.Random.secure().nextDouble() * 1 + 0.2;
+      final double scale = math.Random.secure().nextDouble() * 1 + 1;
 
       children.add(
         Cell(
@@ -74,7 +74,7 @@ class Scene extends Actor {
     }
 
     for (double q = 200; q <= 800; q += 100) {
-      final double scale = math.Random.secure().nextDouble() * 1 + 0.2;
+      final double scale = math.Random.secure().nextDouble() * 1 + 1;
 
       children.add(
         Cell(
