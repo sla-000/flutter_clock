@@ -29,7 +29,7 @@ class Eye extends Actor {
   void update(Actor root, double millis) {
     _eyeRoll(millis);
 
-    if (!rotation.equals(_nextRollRotation, delta: 0.05)) {
+    if (!rotation.equals(_nextRollRotation, delta: 0.1)) {
       if (rotation < _nextRollRotation) {
         rotation += _kEyeRollSpeed * millis / 1000;
       } else if (rotation > _nextRollRotation) {
