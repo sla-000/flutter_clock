@@ -5,15 +5,6 @@ import 'package:flutter/foundation.dart';
 
 import 'actor.dart';
 
-extension Equals on double {
-  bool equals(
-    double value, {
-    double delta = 0.0,
-  }) {
-    return (this >= (value - delta)) && (this <= (value + delta));
-  }
-}
-
 const double _kEyeRollSpeed = 1.5 * 2 * math.pi;
 
 class Eye extends Actor {
@@ -54,7 +45,7 @@ class Eye extends Actor {
 
     if (_accumulatedRollTime >= _nextRollTime) {
       _nextRollTime = math.Random.secure().nextDouble() * 1200 + 300;
-      _nextRollRotation = math.Random.secure().nextDouble() * 2 - 1;
+      _nextRollRotation = math.Random.secure().nextDouble() * 3 - 1.5;
       _accumulatedRollTime = 0;
     }
   }
@@ -62,4 +53,13 @@ class Eye extends Actor {
   double _nextRollTime = 0;
   double _accumulatedRollTime = 0;
   double _nextRollRotation = 0;
+}
+
+extension Equals on double {
+  bool equals(
+    double value, {
+    double delta = 0.0,
+  }) {
+    return (this >= (value - delta)) && (this <= (value + delta));
+  }
 }
