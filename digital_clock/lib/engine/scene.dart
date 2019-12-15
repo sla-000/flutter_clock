@@ -1,10 +1,13 @@
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 
 import 'actor.dart';
 import 'cell.dart';
 import 'manna.dart';
+
+final Logger _log = Logger('Scene')..level = Level.FINEST;
 
 class Scene extends Actor {
   Scene({
@@ -28,6 +31,10 @@ class Scene extends Actor {
     for (double q = 100; q <= 400; q += 100) {
       final double scale = math.Random.secure().nextDouble() * 1 + 1;
 
+      if (q == 100) {
+        _log.finest(() => 'Scene: q=$q');
+      }
+
       children.add(
         Cell(
           name: 'top-$q',
@@ -36,7 +43,6 @@ class Scene extends Actor {
           scaleX: scale,
           scaleY: scale,
           rotation: math.Random.secure().nextDouble() * 2 * math.pi,
-          velocity: math.Random.secure().nextDouble() * 10 + 1,
         ),
       );
     }
@@ -52,7 +58,6 @@ class Scene extends Actor {
           scaleX: scale,
           scaleY: scale,
           rotation: math.Random.secure().nextDouble() * 2 * math.pi,
-          velocity: math.Random.secure().nextDouble() * 10 + 1,
         ),
       );
     }
@@ -68,7 +73,6 @@ class Scene extends Actor {
           scaleX: scale,
           scaleY: scale,
           rotation: math.Random.secure().nextDouble() * 2 * math.pi,
-          velocity: math.Random.secure().nextDouble() * 10 + 1,
         ),
       );
     }
@@ -84,7 +88,6 @@ class Scene extends Actor {
           scaleX: scale,
           scaleY: scale,
           rotation: math.Random.secure().nextDouble() * 2 * math.pi,
-          velocity: math.Random.secure().nextDouble() * 10 + 1,
         ),
       );
     }

@@ -45,10 +45,10 @@ class DigitalClock extends StatefulWidget {
 class _DigitalClockState extends State<DigitalClock> {
   DateTime _dateTime = DateTime.now();
   Timer _timer;
-  final ValueNotifier<int> _H_Notifier = ValueNotifier<int>(0);
-  final ValueNotifier<int> _h_Notifier = ValueNotifier<int>(0);
-  final ValueNotifier<int> _M_Notifier = ValueNotifier<int>(0);
-  final ValueNotifier<int> _m_Notifier = ValueNotifier<int>(0);
+  final ValueNotifier<int> _hHNotifier = ValueNotifier<int>(0);
+  final ValueNotifier<int> _hLNotifier = ValueNotifier<int>(0);
+  final ValueNotifier<int> _mHNotifier = ValueNotifier<int>(0);
+  final ValueNotifier<int> _mLNotifier = ValueNotifier<int>(0);
 
   @override
   void initState() {
@@ -94,10 +94,10 @@ class _DigitalClockState extends State<DigitalClock> {
     widget.model.removeListener(_updateModel);
     widget.model.dispose();
 
-    _H_Notifier.dispose();
-    _h_Notifier.dispose();
-    _M_Notifier.dispose();
-    _m_Notifier.dispose();
+    _hHNotifier.dispose();
+    _hLNotifier.dispose();
+    _mHNotifier.dispose();
+    _mLNotifier.dispose();
 
     super.dispose();
   }
@@ -113,10 +113,10 @@ class _DigitalClockState extends State<DigitalClock> {
 
     _log.finest(() => '_updateTime: _dateTime=$_dateTime');
 
-    _H_Notifier.value = (_dateTime.hour / 10).floor();
-    _h_Notifier.value = (_dateTime.hour % 10).floor();
-    _M_Notifier.value = (_dateTime.minute / 10).floor();
-    _m_Notifier.value = (_dateTime.minute % 10).floor();
+    _hHNotifier.value = (_dateTime.hour / 10).floor();
+    _hLNotifier.value = (_dateTime.hour % 10).floor();
+    _mHNotifier.value = (_dateTime.minute / 10).floor();
+    _mLNotifier.value = (_dateTime.minute % 10).floor();
 
     _timer = Timer(
       Duration(minutes: 1) -
@@ -125,6 +125,45 @@ class _DigitalClockState extends State<DigitalClock> {
       _updateTime,
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        FourDigitsWidget(
+          hHNotifier: _hHNotifier,
+          hLNotifier: _hLNotifier,
+          mHNotifier: _mHNotifier,
+          mLNotifier: _mLNotifier,
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Opacity(
+            opacity: 0.5,
+            child: FloatingActionButton(
+              mini: true,
+              child: Icon(Icons.refresh),
+              onPressed: () => setState(() {}),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class FourDigitsWidget extends StatelessWidget {
+  const FourDigitsWidget({
+    @required this.hHNotifier,
+    @required this.hLNotifier,
+    @required this.mHNotifier,
+    @required this.mLNotifier,
+  });
+
+  final ValueNotifier<int> hHNotifier;
+  final ValueNotifier<int> hLNotifier;
+  final ValueNotifier<int> mHNotifier;
+  final ValueNotifier<int> mLNotifier;
 
   @override
   Widget build(BuildContext context) {
@@ -138,26 +177,26 @@ class _DigitalClockState extends State<DigitalClock> {
         children: <Widget>[
           Expanded(
             child: PetriDish(
-              valueNotifier: _H_Notifier,
+              valueNotifier: hHNotifier,
               calculateFps: true,
               key: const ValueKey<String>('H'),
             ),
           ),
           Expanded(
             child: PetriDish(
-              valueNotifier: _h_Notifier,
+              valueNotifier: hLNotifier,
               key: const ValueKey<String>('h'),
             ),
           ),
           Expanded(
             child: PetriDish(
-              valueNotifier: _M_Notifier,
+              valueNotifier: mHNotifier,
               key: const ValueKey<String>('M'),
             ),
           ),
           Expanded(
             child: PetriDish(
-              valueNotifier: _m_Notifier,
+              valueNotifier: mLNotifier,
               key: const ValueKey<String>('m'),
             ),
           ),

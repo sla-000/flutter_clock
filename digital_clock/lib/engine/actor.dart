@@ -14,6 +14,8 @@ abstract class Draw {
   void draw(Canvas canvas);
 }
 
+const double _kRotationSpeed = 0.5 * 2 * math.pi; // rad in second
+
 abstract class Actor implements Update, Draw {
   Actor({
     @required this.name,
@@ -25,19 +27,22 @@ abstract class Actor implements Update, Draw {
     this.pivotY,
     this.scaleX,
     this.scaleY,
-    this.rotation,
-    this.velocity,
+    this.rotation = 0,
+    this.velocityX,
+    this.velocityY,
     this.colorFilter,
     this.image,
   })  : assert(name != null),
         assert(x != null),
         assert(y != null),
+        assert(rotation != null),
         assert(width != null),
         assert(height != null) {
     pivotX ??= width / 2;
     pivotY ??= height / 2;
-    rotation ??= 0;
-    velocity ??= 0;
+    velocityX ??= 0;
+    velocityY ??= 0;
+    _currentRotation = rotation;
   }
 
   String name;
@@ -50,21 +55,38 @@ abstract class Actor implements Update, Draw {
   double scaleX;
   double scaleY;
   double rotation;
-  double velocity;
+  double velocityX;
+  double velocityY;
   ColorFilter colorFilter;
   ui.Image image;
+
+  double _currentRotation;
+  double maxRotationSpeed = _kRotationSpeed;
 
   final List<Actor> children = <Actor>[];
 
   @override
   @mustCallSuper
   void update(Actor root, double millis) {
-    if (velocity != 0) {
-      x += velocity * math.cos(rotation) * millis / 1000;
-      y += velocity * math.sin(rotation) * millis / 1000;
+    if (velocityX != 0) {
+      x += velocityX * millis / 1000;
     }
 
-    for (final Actor actor in children) {
+    if (velocityX != 0) {
+      y += velocityY * millis / 1000;
+    }
+
+    if (!rotation.equals(_currentRotation, delta: 0.1)) {
+      if (_currentRotation < rotation) {
+        _currentRotation += maxRotationSpeed * millis / 1000;
+      } else if (_currentRotation > rotation) {
+        _currentRotation -= maxRotationSpeed * millis / 1000;
+      }
+    }
+
+    final List<Actor> tempActors = List<Actor>.of(children, growable: false);
+
+    for (final Actor actor in tempActors) {
       actor.update(root, millis);
     }
   }
@@ -75,7 +97,7 @@ abstract class Actor implements Update, Draw {
 
     canvas.translate(x, y);
 
-    canvas.rotate(rotation ?? 0);
+    canvas.rotate(_currentRotation ?? 0);
 
     canvas.scale(scaleX ?? 1, scaleY ?? 1);
 
@@ -93,7 +115,9 @@ abstract class Actor implements Update, Draw {
       );
     }
 
-    for (final Actor actor in children) {
+    final List<Actor> tempActors = List<Actor>.of(children, growable: false);
+
+    for (final Actor actor in tempActors) {
       actor.draw(canvas);
     }
 
@@ -110,7 +134,19 @@ abstract class Actor implements Update, Draw {
 
   @override
   String toString() {
-    return 'Actor{name: $name, x: $x, y: $y, width: $width, height: $height, '
-        'rotation: $rotation, children: $children}';
+    return 'Actor{name: $name, '
+        'x: $x, y: $y, '
+        'velocityX: $velocityX, velocityY: $velocityY, '
+        'width: $width, height: $height, '
+        'rotation: $_currentRotation, children: $children}';
+  }
+}
+
+extension Equals on double {
+  bool equals(
+    double value, {
+    double delta = 0.0,
+  }) {
+    return (this >= (value - delta)) && (this <= (value + delta));
   }
 }

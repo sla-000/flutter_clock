@@ -27,15 +27,11 @@ class Eye extends Actor {
 
   @override
   void update(Actor root, double millis) {
-    _eyeRoll(millis);
-
-    if (!rotation.equals(_nextRollRotation, delta: 0.1)) {
-      if (rotation < _nextRollRotation) {
-        rotation += _kEyeRollSpeed * millis / 1000;
-      } else if (rotation > _nextRollRotation) {
-        rotation -= _kEyeRollSpeed * millis / 1000;
-      }
+    if (millis > 100) {
+      millis = 100;
     }
+
+    _eyeRoll(millis);
 
     super.update(root, millis);
   }
@@ -45,21 +41,11 @@ class Eye extends Actor {
 
     if (_accumulatedRollTime >= _nextRollTime) {
       _nextRollTime = math.Random.secure().nextDouble() * 1200 + 300;
-      _nextRollRotation = math.Random.secure().nextDouble() * 3 - 1.5;
+      rotation = math.Random.secure().nextDouble() * 3 - 1.5;
       _accumulatedRollTime = 0;
     }
   }
 
   double _nextRollTime = 0;
   double _accumulatedRollTime = 0;
-  double _nextRollRotation = 0;
-}
-
-extension Equals on double {
-  bool equals(
-    double value, {
-    double delta = 0.0,
-  }) {
-    return (this >= (value - delta)) && (this <= (value + delta));
-  }
 }

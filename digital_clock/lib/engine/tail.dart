@@ -20,7 +20,6 @@ class Tail extends Actor {
           height: 6,
           scaleX: scaleX,
           scaleY: scaleY,
-          rotation: 0,
           colorFilter: ColorFilter.mode(Colors.green, BlendMode.modulate),
           image: Assets.instance.tailImages[0],
         );

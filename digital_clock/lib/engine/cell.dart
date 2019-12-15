@@ -1,9 +1,16 @@
+import 'dart:math' as math;
+
 import 'package:digital_clock/engine/tail.dart';
 import 'package:digital_clock/utils/assets.dart';
 import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 
 import 'actor.dart';
 import 'eye.dart';
+
+const double _kCellCloseDistance = 50;
+
+final Logger _log = Logger('Cell')..level = Level.FINEST;
 
 class Cell extends Actor {
   Cell({
@@ -13,7 +20,6 @@ class Cell extends Actor {
     double scaleX,
     double scaleY,
     double rotation,
-    double velocity,
   }) : super(
           name: 'cell-$name',
           x: x,
@@ -23,9 +29,12 @@ class Cell extends Actor {
           scaleX: scaleX,
           scaleY: scaleY,
           rotation: rotation,
-          velocity: velocity,
+          velocityX: 19,
+          velocityY: 17,
           image: Assets.instance.bodyImage,
         ) {
+    rotation ??= 0;
+
     tail = Tail(
       name: name,
       x: -22,
@@ -52,10 +61,62 @@ class Cell extends Actor {
 
   @override
   void update(Actor root, double millis) {
-    rotation ??= 0;
+    _move(root, millis);
 
-    rotation += 0.2 * 2 * 3.1415 * (millis / 1000);
+    _collisions(root);
 
     super.update(root, millis);
   }
+
+  void _move(Actor root, double millis) {
+    rotation += 0.2 * 2 * 3.1415 * (millis / 1000);
+  }
+
+  void _collisions(Actor root) {
+    _bordersCollisions(root);
+
+    _cellsCollisions(root);
+  }
+
+  void _bordersCollisions(Actor root) {
+    final double cellRadius = radius();
+
+    if (x < cellRadius) {
+      velocityX = -velocityX;
+    } else if (x > root.width - cellRadius) {
+      velocityX = -velocityX;
+    }
+
+    if (y < cellRadius) {
+      velocityY = -velocityY;
+    } else if (y > root.height - cellRadius) {
+      velocityY = -velocityY;
+    }
+  }
+
+  void _cellsCollisions(Actor root) {
+    final List<Cell> collidedCells = root.children
+        .whereType<Cell>()
+        .where((Cell otherCell) => isCollided(otherCell))
+        .where((Cell cell) => cell != this)
+        .toList();
+
+    if (collidedCells.isNotEmpty) {
+      velocityX = -velocityX;
+      velocityY = -velocityY;
+    }
+  }
+
+  bool isCollided(Cell otherCell) {
+    return distance(otherCell) < (radius() + otherCell.radius());
+  }
+
+  double distance(Actor other) {
+    final double dx = other.x - x;
+    final double dy = other.y - y;
+
+    return math.sqrt(math.pow(dx, 2) + math.pow(dy, 2));
+  }
+
+  double radius() => (width * scaleX + height * scaleY) / 4;
 }
