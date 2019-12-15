@@ -36,6 +36,8 @@ abstract class Actor implements Update, Draw {
         assert(height != null) {
     pivotX ??= width / 2;
     pivotY ??= height / 2;
+    rotation ??= 0;
+    velocity ??= 0;
   }
 
   String name;
@@ -57,8 +59,6 @@ abstract class Actor implements Update, Draw {
   @override
   @mustCallSuper
   void update(Actor root, double millis) {
-    velocity ??= 0;
-
     if (velocity != 0) {
       x += velocity * math.cos(rotation) * millis / 1000;
       y += velocity * math.sin(rotation) * millis / 1000;
