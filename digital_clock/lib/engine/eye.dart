@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:digital_clock/engine/vector.dart';
 import 'package:digital_clock/utils/assets.dart';
 import 'package:flutter/foundation.dart';
 
@@ -10,18 +11,13 @@ const double _kEyeRollSpeed = 1.5 * 2 * math.pi;
 class Eye extends Actor {
   Eye({
     @required String name,
-    @required double x,
-    @required double y,
-    double scaleX,
-    double scaleY,
+    @required Vector position,
+    Vector scale,
   }) : super(
           name: 'eye-$name',
-          x: x,
-          y: y,
-          width: 10,
-          height: 10,
-          scaleX: scaleX,
-          scaleY: scaleY,
+    position: position,
+    size: Vector(x: 10, y: 10),
+    scale: scale,
           image: Assets.instance.eyeImage,
         );
 

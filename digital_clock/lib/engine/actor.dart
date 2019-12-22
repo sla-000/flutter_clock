@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:digital_clock/engine/vector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
@@ -19,46 +20,32 @@ const double _kRotationSpeed = 0.5 * 2 * math.pi; // rad in second
 abstract class Actor implements Update, Draw {
   Actor({
     @required this.name,
-    @required this.x,
-    @required this.y,
-    @required this.width,
-    @required this.height,
-    this.pivotX,
-    this.pivotY,
-    this.scaleX,
-    this.scaleY,
-    this.rotation = 0,
-    this.velocityX,
-    this.velocityY,
+    @required this.position,
+    @required this.size,
+    this.scale,
+    this.pivot,
+    this.rotation,
+    this.velocity,
     this.colorFilter,
     this.image,
-  })  : assert(name != null),
-        assert(x != null),
-        assert(y != null),
-        assert(rotation != null),
-        assert(width != null),
-        assert(height != null) {
-    pivotX ??= width / 2;
-    pivotY ??= height / 2;
-    velocityX ??= 0;
-    velocityY ??= 0;
+  }) {
+    pivot ??= Vector(x: size.x / 2, y: size.y / 2);
+    scale ??= Vector.ordinal();
+    velocity ??= Vector.zero();
+    rotation ??= 0;
     _currentRotation = rotation;
   }
 
-  String name;
-  double x;
-  double y;
-  double width;
-  double height;
-  double pivotX;
-  double pivotY;
-  double scaleX;
-  double scaleY;
+  final String name;
+  Vector position;
+  Vector size;
+  Vector pivot;
+  Vector scale;
   double rotation;
-  double velocityX;
-  double velocityY;
+  Vector velocity;
   ColorFilter colorFilter;
   ui.Image image;
+  Offset acceleration;
 
   double _currentRotation;
   double maxRotationSpeed = _kRotationSpeed;
@@ -68,12 +55,12 @@ abstract class Actor implements Update, Draw {
   @override
   @mustCallSuper
   void update(Actor root, double millis) {
-    if (velocityX != 0) {
-      x += velocityX * millis / 1000;
+    if (velocity.x != 0) {
+      position.x += velocity.x * millis / 1000;
     }
 
-    if (velocityX != 0) {
-      y += velocityY * millis / 1000;
+    if (velocity.y != 0) {
+      position.y += velocity.y * millis / 1000;
     }
 
     if (!rotation.equals(_currentRotation, delta: 0.1)) {
@@ -95,19 +82,19 @@ abstract class Actor implements Update, Draw {
   void draw(Canvas canvas) {
     canvas.save();
 
-    canvas.translate(x, y);
+    canvas.translate(position.x, position.y);
 
     canvas.rotate(_currentRotation ?? 0);
 
-    canvas.scale(scaleX ?? 1, scaleY ?? 1);
+    canvas.scale(scale.x ?? 1, scale.y ?? 1);
 
     if (image != null) {
       paintImage(
         canvas: canvas,
         rect: Rect.fromCenter(
           center: Offset.zero,
-          width: width,
-          height: height,
+          width: size.x,
+          height: size.y,
         ),
         colorFilter: colorFilter,
         filterQuality: Config.instance.filterQuality,
@@ -135,10 +122,12 @@ abstract class Actor implements Update, Draw {
   @override
   String toString() {
     return 'Actor{name: $name, '
-        'x: $x, y: $y, '
-        'velocityX: $velocityX, velocityY: $velocityY, '
-        'width: $width, height: $height, '
-        'rotation: $_currentRotation, children: $children}';
+        'position: $position, '
+        'size: $size, '
+        'velocity: $velocity, '
+        'scale: $scale, '
+        'rotation: $_currentRotation, '
+        'children: $children}';
   }
 }
 

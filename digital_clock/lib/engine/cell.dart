@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:digital_clock/engine/tail.dart';
+import 'package:digital_clock/engine/vector.dart';
 import 'package:digital_clock/utils/assets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
@@ -15,41 +16,31 @@ final Logger _log = Logger('Cell')..level = Level.FINEST;
 class Cell extends Actor {
   Cell({
     @required String name,
-    @required double x,
-    @required double y,
-    double scaleX,
-    double scaleY,
+    @required Vector position,
+    Vector scale,
     double rotation,
   }) : super(
           name: 'cell-$name',
-          x: x,
-          y: y,
-          width: 40,
-          height: 40,
-          scaleX: scaleX,
-          scaleY: scaleY,
+    position: position,
+    size: Vector(x: 40, y: 40),
+    scale: scale,
           rotation: rotation,
-          velocityX: 19,
-          velocityY: 17,
+    velocity: Vector(x: 19, y: 17),
           image: Assets.instance.bodyImage,
         ) {
     rotation ??= 0;
 
     tail = Tail(
       name: name,
-      x: -22,
-      y: 0,
-      scaleX: scaleX,
-      scaleY: scaleY,
+      position: Vector(x: -22, y: 0),
+      scale: scale,
     );
     children.add(tail);
 
     eye = Eye(
       name: name,
-      x: 8,
-      y: 0,
-      scaleX: 1.2 / scaleX + 0.8,
-      scaleY: 1.2 / scaleY + 0.8,
+      position: Vector(x: 8, y: 0),
+      scale: Vector(x: 1.2 / scale.x + 0.8, y: 1.2 / scale.y + 0.8),
     );
 
     children.add(eye);
@@ -81,16 +72,16 @@ class Cell extends Actor {
   void _bordersCollisions(Actor root) {
     final double cellRadius = radius();
 
-    if (x < cellRadius) {
-      velocityX = -velocityX;
-    } else if (x > root.width - cellRadius) {
-      velocityX = -velocityX;
+    if (position.x < cellRadius) {
+      velocity.x = -velocity.x;
+    } else if (position.x > root.size.x - cellRadius) {
+      velocity.x = -velocity.x;
     }
 
-    if (y < cellRadius) {
-      velocityY = -velocityY;
-    } else if (y > root.height - cellRadius) {
-      velocityY = -velocityY;
+    if (position.y < cellRadius) {
+      velocity.y = -velocity.y;
+    } else if (position.y > root.size.y - cellRadius) {
+      velocity.y = -velocity.y;
     }
   }
 
@@ -102,8 +93,8 @@ class Cell extends Actor {
         .toList();
 
     if (collidedCells.isNotEmpty) {
-      velocityX = -velocityX;
-      velocityY = -velocityY;
+      velocity.x = -velocity.x;
+      velocity.y = -velocity.y;
     }
   }
 
@@ -112,11 +103,11 @@ class Cell extends Actor {
   }
 
   double distance(Actor other) {
-    final double dx = other.x - x;
-    final double dy = other.y - y;
+    final double dx = other.position.x - position.x;
+    final double dy = other.position.y - position.y;
 
     return math.sqrt(math.pow(dx, 2) + math.pow(dy, 2));
   }
 
-  double radius() => (width * scaleX + height * scaleY) / 4;
+  double radius() => (size.x * scale.x + size.y * scale.y) / 4;
 }

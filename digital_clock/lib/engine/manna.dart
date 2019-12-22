@@ -1,3 +1,4 @@
+import 'package:digital_clock/engine/vector.dart';
 import 'package:digital_clock/utils/assets.dart';
 import 'package:flutter/foundation.dart';
 
@@ -6,14 +7,11 @@ import 'actor.dart';
 class Manna extends Actor {
   Manna({
     @required String name,
-    @required double x,
-    @required double y,
+    @required Vector position,
   }) : super(
-          name: 'manna-$name',
-          x: x,
-          y: y,
-          width: 10,
-          height: 10,
-          image: Assets.instance.mannaImage,
-        );
+    name: 'manna-$name',
+    position: position,
+    size: Vector(x: 10, y: 10),
+    image: Assets.instance.mannaImage,
+  );
 }
