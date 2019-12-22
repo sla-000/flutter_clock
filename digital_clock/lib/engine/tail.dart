@@ -12,13 +12,13 @@ class Tail extends Actor {
     @required Vector position,
     Vector scale,
   }) : super(
-    name: 'tail-$name',
-    position: position,
-    size: Vector(x: 6, y: 6),
-    scale: scale,
-    colorFilter: ColorFilter.mode(Colors.green, BlendMode.modulate),
-    image: Assets.instance.tailImages[0],
-  );
+          name: 'tail-$name',
+          position: position,
+          size: Vector(x: 6, y: 6),
+          scale: scale,
+          colorFilter: ColorFilter.mode(Colors.green, BlendMode.modulate),
+          image: Assets.instance.tailImages[0],
+        );
 
   int _index = 0;
 

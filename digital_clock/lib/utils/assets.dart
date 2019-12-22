@@ -23,7 +23,7 @@ class Assets {
     eyeImage = await _getImageFromFile('eye.png');
 
     for (int q = 0; q < 10; ++q) {
-      tailImages.add(await _getImageFromFile('tail$q.png'));
+      tailImages.add(await _getImageFromFile('tail/tail$q.png'));
     }
 
     mannaImage = await _getImageFromFile('manna.png');

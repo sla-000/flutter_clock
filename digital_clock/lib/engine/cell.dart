@@ -21,11 +21,11 @@ class Cell extends Actor {
     double rotation,
   }) : super(
           name: 'cell-$name',
-    position: position,
-    size: Vector(x: 40, y: 40),
-    scale: scale,
+          position: position,
+          size: Vector(x: 40, y: 40),
+          scale: scale,
           rotation: rotation,
-    velocity: Vector(x: 19, y: 17),
+          velocity: Vector(x: 19, y: 17),
           image: Assets.instance.bodyImage,
         ) {
     rotation ??= 0;

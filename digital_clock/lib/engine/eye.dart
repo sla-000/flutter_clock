@@ -15,9 +15,9 @@ class Eye extends Actor {
     Vector scale,
   }) : super(
           name: 'eye-$name',
-    position: position,
-    size: Vector(x: 10, y: 10),
-    scale: scale,
+          position: position,
+          size: Vector(x: 10, y: 10),
+          scale: scale,
           image: Assets.instance.eyeImage,
         );
 

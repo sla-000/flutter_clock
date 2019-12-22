@@ -15,8 +15,8 @@ class Scene extends Actor {
     @required String name,
   }) : super(
           name: 'scene-$name',
-    position: Vector.zero(),
-    size: Vector(x: 500, y: 1000),
+          position: Vector.zero(),
+          size: Vector(x: 500, y: 1000),
           image: null,
         ) {
     for (int q = 100; q <= 900; q += 100) {
