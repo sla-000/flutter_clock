@@ -9,9 +9,9 @@ class Manna extends Actor {
     @required String name,
     @required Vector position,
   }) : super(
-    name: 'manna-$name',
-    position: position,
-    size: Vector(x: 10, y: 10),
-    image: Assets.instance.mannaImage,
-  );
+          name: 'manna-$name',
+          position: position,
+          size: Vector(x: 10, y: 10),
+          image: Assets.instance.mannaImage,
+        );
 }

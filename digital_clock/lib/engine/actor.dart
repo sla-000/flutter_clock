@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:digital_clock/engine/movement.dart';
 import 'package:digital_clock/engine/vector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
@@ -29,11 +30,11 @@ abstract class Actor implements Update, Draw {
     this.colorFilter,
     this.image,
   }) {
+    scale ??= Vector.one();
     pivot ??= Vector(x: size.x / 2, y: size.y / 2);
-    scale ??= Vector.ordinal();
     velocity ??= Vector.zero();
     rotation ??= 0;
-    _currentRotation = rotation;
+    movement.rotation.current = rotation;
   }
 
   final String name;
@@ -47,7 +48,8 @@ abstract class Actor implements Update, Draw {
   ui.Image image;
   Offset acceleration;
 
-  double _currentRotation;
+  final Movement movement = Movement();
+
   double maxRotationSpeed = _kRotationSpeed;
 
   final List<Actor> children = <Actor>[];
@@ -63,13 +65,7 @@ abstract class Actor implements Update, Draw {
       position.y += velocity.y * millis / 1000;
     }
 
-    if (!rotation.equals(_currentRotation, delta: 0.1)) {
-      if (_currentRotation < rotation) {
-        _currentRotation += maxRotationSpeed * millis / 1000;
-      } else if (_currentRotation > rotation) {
-        _currentRotation -= maxRotationSpeed * millis / 1000;
-      }
-    }
+    movement.rotation.next(rotation, millis);
 
     final List<Actor> tempActors = List<Actor>.of(children, growable: false);
 
@@ -84,7 +80,7 @@ abstract class Actor implements Update, Draw {
 
     canvas.translate(position.x, position.y);
 
-    canvas.rotate(_currentRotation ?? 0);
+    canvas.rotate(movement.rotation.current);
 
     canvas.scale(scale.x ?? 1, scale.y ?? 1);
 
@@ -126,7 +122,8 @@ abstract class Actor implements Update, Draw {
         'size: $size, '
         'velocity: $velocity, '
         'scale: $scale, '
-        'rotation: $_currentRotation, '
+        'rotation: $rotation, '
+        'movement: $movement, '
         'children: $children}';
   }
 }

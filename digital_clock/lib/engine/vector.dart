@@ -12,7 +12,7 @@ class Vector {
 
   Vector.both(double d) : this(x: d, y: d);
 
-  Vector.ordinal() : this(x: 1, y: 1);
+  Vector.one() : this(x: 1, y: 1);
 
   double x;
   double y;

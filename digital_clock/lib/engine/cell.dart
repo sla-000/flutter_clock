@@ -60,7 +60,7 @@ class Cell extends Actor {
   }
 
   void _move(Actor root, double millis) {
-    rotation += 0.2 * 2 * 3.1415 * (millis / 1000);
+    rotation -= 0.2 * 2 * 3.1415 * (millis / 1000);
   }
 
   void _collisions(Actor root) {
