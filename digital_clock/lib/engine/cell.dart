@@ -101,7 +101,7 @@ class Cell extends Actor {
         .toList();
 
     if (collidedCells.isNotEmpty) {
-      velocityAngle = getCollideResultVectorAngle(collidedCells);
+      velocityAngle = getCollideResultVectorAngle(collidedCells[0]);
     }
   }
 
@@ -109,32 +109,14 @@ class Cell extends Actor {
     return distance(otherCell) < (radius() + otherCell.radius());
   }
 
-  int test = 0;
-
-  double getCollideResultVectorAngle(List<Cell> cells) {
-    final double normalAverageAngle = cells
-            .map((Cell cell) => getVectorAngle(cellsVector(cell)))
-            .reduce((double angle1, double angle2) => angle1 + angle2) /
-        cells.length;
-
-    if (name == 'cell-top-1' && test++ < 20) {
-      _log.finest(() =>
-          'getCollideResultVectorAngle: normalAverageAngle=$normalAverageAngle');
-    }
-
-    final double rez = getNextAngle(normalAverageAngle, velocityAngle);
-
-    if (name == 'cell-top-1' && test++ < 20) {
-      _log.finest(() => 'getCollideResultVectorAngle: rez=$rez');
-    }
-
-    return getNextAngle(normalAverageAngle, velocityAngle);
+  double getCollideResultVectorAngle(Cell cell) {
+    return getVectorAngle(cellsVector(cell));
   }
 
   Vector cellsVector(Cell cell) {
     return Vector(
-      x: cell.position.x - position.x,
-      y: cell.position.y - position.y,
+      x: position.x - cell.position.x,
+      y: position.y - cell.position.y,
     );
   }
 
