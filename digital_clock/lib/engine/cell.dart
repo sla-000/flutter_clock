@@ -28,7 +28,7 @@ class Cell extends Actor {
           size: Vector(x: 40, y: 40),
           scale: scale,
           rotation: rotation,
-          velocity: velocity ?? 20,
+          velocity: velocity ?? 50,
           velocityAngle: velocityAngle ?? 0.5,
           image: Assets.instance.bodyImage,
         ) {
