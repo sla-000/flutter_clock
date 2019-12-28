@@ -57,7 +57,7 @@ double getNextAngle(double obstacleNormalAngle, double velocityAngle) {
     }
   }
 
-  return clamp2pi(2 * obstacleNormalAngle - velocityAngle - math.pi);
+  return clamp2pi(rez);
 }
 
 double getVectorAngle(Vector v) {
