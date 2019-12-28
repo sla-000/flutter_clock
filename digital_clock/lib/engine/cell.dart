@@ -10,8 +10,6 @@ import 'package:logging/logging.dart';
 import 'actor.dart';
 import 'eye.dart';
 
-const double _kCellCloseDistance = 50;
-
 final Logger _log = Logger('Cell')..level = Level.FINEST;
 
 class Cell extends Actor {
@@ -28,7 +26,7 @@ class Cell extends Actor {
           size: Vector(x: 40, y: 40),
           scale: scale,
           rotation: rotation,
-          velocity: velocity ?? 50,
+          velocity: velocity ?? 100,
           velocityAngle: velocityAngle ?? 0.5,
           image: Assets.instance.bodyImage,
         ) {
@@ -110,6 +108,9 @@ class Cell extends Actor {
   }
 
   double getCollideResultVectorAngle(Cell cell) {
+//    final double normalVector = getVectorAngle(cellsVector(cell));
+//    return getNextAngle(normalVector, velocityAngle);
+
     return getVectorAngle(cellsVector(cell));
   }
 
@@ -119,11 +120,6 @@ class Cell extends Actor {
       y: position.y - cell.position.y,
     );
   }
-
-//  Vector cellsVector(Cell cell) {
-//    return Vector(
-//        x: cell.position.x - position.x, y: cell.position.y - position.y);
-//  }
 
   double distance(Actor other) {
     final double dx = other.position.x - position.x;
