@@ -27,13 +27,15 @@ abstract class Actor implements Update, Draw {
     this.pivot,
     this.rotation,
     this.velocity,
+    this.velocityAngle,
     this.colorFilter,
     this.image,
   }) {
     scale ??= Vector.one();
     pivot ??= Vector(x: size.x / 2, y: size.y / 2);
-    velocity ??= Vector.zero();
+    velocity ??= 0;
     rotation ??= 0;
+    velocityAngle ??= 0;
     movement.rotation.current = rotation;
   }
 
@@ -43,7 +45,8 @@ abstract class Actor implements Update, Draw {
   Vector pivot;
   Vector scale;
   double rotation;
-  Vector velocity;
+  double velocity;
+  double velocityAngle;
   ColorFilter colorFilter;
   ui.Image image;
   Offset acceleration;
@@ -57,12 +60,9 @@ abstract class Actor implements Update, Draw {
   @override
   @mustCallSuper
   void update(Actor root, double millis) {
-    if (velocity.x != 0) {
-      position.x += velocity.x * millis / 1000;
-    }
-
-    if (velocity.y != 0) {
-      position.y += velocity.y * millis / 1000;
+    if (velocity != 0) {
+      position.x += velocity * math.cos(velocityAngle) * millis / 1000;
+      position.y += velocity * math.sin(velocityAngle) * millis / 1000;
     }
 
     movement.rotation.next(rotation, millis);

@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 
+import 'package:digital_clock/engine/math.dart';
+
 class Movement {
   CalculateNextRotation rotation = CalculateNextRotation();
 
@@ -56,7 +58,7 @@ class CalculateNextRotation extends CalculateNext<double> {
       }
     }
 
-    current = _clamp2pi(nextCurrent);
+    current = clamp2pi(nextCurrent);
   }
 
   double _add(double desired, double millis) {
@@ -81,17 +83,5 @@ class CalculateNextRotation extends CalculateNext<double> {
 
   double _step(double millis) {
     return speed * millis / 1000;
-  }
-
-  double _clamp2pi(double value) {
-    while (value < 0) {
-      value += 2 * math.pi;
-    }
-
-    while (value > 2 * math.pi) {
-      value -= 2 * math.pi;
-    }
-
-    return value;
   }
 }

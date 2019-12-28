@@ -26,6 +26,32 @@ class Scene extends Actor {
       ));
     }
 
+    if (name == '1') {
+      final double scale = math.Random.secure().nextDouble() * 1 + 1;
+
+      children.add(
+        Cell(
+          name: 'top-1',
+          position: Vector(x: 200, y: 100),
+          scale: Vector.both(scale),
+          velocityAngle: math.pi * 1 / 4,
+          rotation: math.Random.secure().nextDouble() * 2 * math.pi,
+        ),
+      );
+
+      children.add(
+        Cell(
+          name: 'top-2',
+          position: Vector(x: 300, y: 100),
+          scale: Vector.both(scale),
+          velocityAngle: math.pi * 3 / 4,
+          rotation: math.Random.secure().nextDouble() * 2 * math.pi,
+        ),
+      );
+    }
+
+    return;
+
     for (double q = 100; q <= 400; q += 100) {
       final double scale = math.Random.secure().nextDouble() * 1 + 1;
 

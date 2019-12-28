@@ -15,11 +15,13 @@ class PetriDish extends StatefulWidget {
   const PetriDish({
     @required this.valueNotifier,
     this.calculateFps,
+    this.name,
     Key key,
   }) : super(key: key);
 
   final ValueNotifier<int> valueNotifier;
   final bool calculateFps;
+  final String name;
 
   @override
   _PetriDishState createState() => _PetriDishState();
@@ -48,7 +50,7 @@ class _PetriDishState extends State<PetriDish> {
           return child;
         }
 
-        scene ??= Scene(name: 'life');
+        scene ??= Scene(name: widget.name);
 
         return AspectRatio(
           aspectRatio: 1 / 2,

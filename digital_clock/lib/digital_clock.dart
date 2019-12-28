@@ -179,24 +179,28 @@ class FourDigitsWidget extends StatelessWidget {
             child: PetriDish(
               valueNotifier: hHNotifier,
               calculateFps: true,
+              name: '1',
               key: const ValueKey<String>('H'),
             ),
           ),
           Expanded(
             child: PetriDish(
               valueNotifier: hLNotifier,
+              name: '2',
               key: const ValueKey<String>('h'),
             ),
           ),
           Expanded(
             child: PetriDish(
               valueNotifier: mHNotifier,
+              name: '3',
               key: const ValueKey<String>('M'),
             ),
           ),
           Expanded(
             child: PetriDish(
               valueNotifier: mLNotifier,
+              name: '4',
               key: const ValueKey<String>('m'),
             ),
           ),

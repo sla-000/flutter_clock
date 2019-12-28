@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:digital_clock/engine/math.dart';
 import 'package:digital_clock/engine/tail.dart';
 import 'package:digital_clock/engine/vector.dart';
 import 'package:digital_clock/utils/assets.dart';
@@ -19,13 +20,16 @@ class Cell extends Actor {
     @required Vector position,
     Vector scale,
     double rotation,
+    double velocity,
+    double velocityAngle,
   }) : super(
           name: 'cell-$name',
           position: position,
           size: Vector(x: 40, y: 40),
           scale: scale,
           rotation: rotation,
-          velocity: Vector(x: 19, y: 17),
+          velocity: velocity ?? 20,
+          velocityAngle: velocityAngle ?? 0.5,
           image: Assets.instance.bodyImage,
         ) {
     rotation ??= 0;
@@ -72,16 +76,20 @@ class Cell extends Actor {
   void _bordersCollisions(Actor root) {
     final double cellRadius = radius();
 
-    if (position.x < cellRadius) {
-      velocity.x = -velocity.x;
-    } else if (position.x > root.size.x - cellRadius) {
-      velocity.x = -velocity.x;
+    if (position.x < cellRadius &&
+        getDirection(velocityAngle).contains(Direction.west)) {
+      velocityAngle = getNextAngle(math.pi * 0 / 2, velocityAngle);
+    } else if (position.x > root.size.x - cellRadius &&
+        getDirection(velocityAngle).contains(Direction.east)) {
+      velocityAngle = getNextAngle(math.pi * 2 / 2, velocityAngle);
     }
 
-    if (position.y < cellRadius) {
-      velocity.y = -velocity.y;
-    } else if (position.y > root.size.y - cellRadius) {
-      velocity.y = -velocity.y;
+    if (position.y < cellRadius &&
+        getDirection(velocityAngle).contains(Direction.north)) {
+      velocityAngle = getNextAngle(math.pi * 1 / 2, velocityAngle);
+    } else if (position.y > root.size.y - cellRadius &&
+        getDirection(velocityAngle).contains(Direction.south)) {
+      velocityAngle = getNextAngle(math.pi * 3 / 2, velocityAngle);
     }
   }
 
@@ -93,13 +101,26 @@ class Cell extends Actor {
         .toList();
 
     if (collidedCells.isNotEmpty) {
-      velocity.x = -velocity.x;
-      velocity.y = -velocity.y;
+      velocityAngle = getCollideResultVectorAngle(collidedCells);
     }
   }
 
   bool isCollided(Cell otherCell) {
     return distance(otherCell) < (radius() + otherCell.radius());
+  }
+
+  double getCollideResultVectorAngle(List<Cell> cells) {
+    _log.finest(() => 'getCollideResultVectorAngle: cells=$cells');
+
+    return cells
+            .map((Cell cell) => getVectorAngle(cellsVector(cell)))
+            .reduce((double angle1, double angle2) => angle1 + angle2) /
+        cells.length;
+  }
+
+  Vector cellsVector(Cell cell) {
+    return Vector(
+        x: cell.position.x - position.x, y: cell.position.y - position.y);
   }
 
   double distance(Actor other) {
