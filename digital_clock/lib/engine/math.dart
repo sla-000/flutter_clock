@@ -43,7 +43,7 @@ List<Direction> getDirection(double velocityAngle) {
   return rez;
 }
 
-const double kMinGoodByeAngle = math.pi / 2;
+const double kMinGoodByeAngle = math.pi / 10;
 
 double getNextAngle(double obstacleNormalAngle, double velocityAngle) {
   double rez = 2 * obstacleNormalAngle - velocityAngle - math.pi;
