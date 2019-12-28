@@ -56,9 +56,9 @@ class Cell extends Actor {
 
   @override
   void update(Actor root, double millis) {
-    _move(root, millis);
-
     _collisions(root);
+
+    _move(root, millis);
 
     super.update(root, millis);
   }
@@ -109,19 +109,39 @@ class Cell extends Actor {
     return distance(otherCell) < (radius() + otherCell.radius());
   }
 
-  double getCollideResultVectorAngle(List<Cell> cells) {
-    _log.finest(() => 'getCollideResultVectorAngle: cells=$cells');
+  int test = 0;
 
-    return cells
+  double getCollideResultVectorAngle(List<Cell> cells) {
+    final double normalAverageAngle = cells
             .map((Cell cell) => getVectorAngle(cellsVector(cell)))
             .reduce((double angle1, double angle2) => angle1 + angle2) /
         cells.length;
+
+    if (name == 'cell-top-1' && test++ < 20) {
+      _log.finest(() =>
+          'getCollideResultVectorAngle: normalAverageAngle=$normalAverageAngle');
+    }
+
+    final double rez = getNextAngle(normalAverageAngle, velocityAngle);
+
+    if (name == 'cell-top-1' && test++ < 20) {
+      _log.finest(() => 'getCollideResultVectorAngle: rez=$rez');
+    }
+
+    return getNextAngle(normalAverageAngle, velocityAngle);
   }
 
   Vector cellsVector(Cell cell) {
     return Vector(
-        x: cell.position.x - position.x, y: cell.position.y - position.y);
+      x: cell.position.x - position.x,
+      y: cell.position.y - position.y,
+    );
   }
+
+//  Vector cellsVector(Cell cell) {
+//    return Vector(
+//        x: cell.position.x - position.x, y: cell.position.y - position.y);
+//  }
 
   double distance(Actor other) {
     final double dx = other.position.x - position.x;

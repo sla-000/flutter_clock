@@ -121,6 +121,7 @@ abstract class Actor implements Update, Draw {
         'position: $position, '
         'size: $size, '
         'velocity: $velocity, '
+        'velocityAngle: $velocityAngle, '
         'scale: $scale, '
         'rotation: $rotation, '
         'movement: $movement, '

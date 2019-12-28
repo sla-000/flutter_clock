@@ -166,7 +166,6 @@ class PetriPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-//    _log.finest(() => 'paint: size=$size');
     scene.draw(canvas);
 
     Future<void>(() {

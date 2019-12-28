@@ -35,6 +35,7 @@ class Scene extends Actor {
           position: Vector(x: 200, y: 100),
           scale: Vector.both(scale),
           velocityAngle: math.pi * 1 / 4,
+          velocity: 200,
           rotation: math.Random.secure().nextDouble() * 2 * math.pi,
         ),
       );
@@ -45,6 +46,7 @@ class Scene extends Actor {
           position: Vector(x: 300, y: 100),
           scale: Vector.both(scale),
           velocityAngle: math.pi * 3 / 4,
+          velocity: 250,
           rotation: math.Random.secure().nextDouble() * 2 * math.pi,
         ),
       );
