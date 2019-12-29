@@ -65,8 +65,6 @@ abstract class Actor implements Update, Draw {
       position.y += velocity * math.sin(velocityAngle) * millis / 1000;
     }
 
-    movement.rotation.next(rotation, millis);
-
     final List<Actor> tempActors = List<Actor>.of(children, growable: false);
 
     for (final Actor actor in tempActors) {

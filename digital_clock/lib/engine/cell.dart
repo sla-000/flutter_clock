@@ -58,6 +58,8 @@ class Cell extends Actor {
 
     _move(root, millis);
 
+    movement.rotation.next(velocityAngle, millis);
+
     super.update(root, millis);
   }
 
@@ -108,16 +110,13 @@ class Cell extends Actor {
   }
 
   double getCollideResultVectorAngle(Cell cell) {
-    final double normalVector = getVectorAngle(cellsVector(cell));
-    return getNextAngle(normalVector, velocityAngle);
-
-    return getVectorAngle(cellsVector(cell));
+    return getVectorAngle(cellsDeltaVector(cell));
   }
 
-  Vector cellsVector(Cell cell) {
+  Vector cellsDeltaVector(Cell otherCell) {
     return Vector(
-      x: position.x - cell.position.x,
-      y: position.y - cell.position.y,
+      x: position.x - otherCell.position.x,
+      y: position.y - otherCell.position.y,
     );
   }
 

@@ -29,6 +29,8 @@ class Eye extends Actor {
 
     _eyeRoll(millis);
 
+    movement.rotation.next(rotation, millis);
+
     super.update(root, millis);
   }
 

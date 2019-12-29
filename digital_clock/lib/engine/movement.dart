@@ -42,43 +42,21 @@ class CalculateNextRotation extends CalculateNext<double> {
 
     double nextCurrent;
 
-    if (desired > current) {
-      final double delta = desired - current;
-      if (delta > math.pi) {
-        nextCurrent = _dec(desired, millis);
-      } else {
-        nextCurrent = _add(desired, millis);
-      }
+    final double delta = getAngleDelta(current, desired);
+    if (delta < 0) {
+      nextCurrent = _dec(desired, millis);
     } else {
-      final double delta = current - desired;
-      if (delta < math.pi) {
-        nextCurrent = _dec(desired, millis);
-      } else {
-        nextCurrent = _add(desired, millis);
-      }
+      nextCurrent = _add(desired, millis);
     }
-
     current = clamp2pi(nextCurrent);
   }
 
   double _add(double desired, double millis) {
-    double nextCurrent = current + _step(millis);
-
-    if (nextCurrent > desired) {
-      nextCurrent = desired;
-    }
-
-    return nextCurrent;
+    return current + _step(millis);
   }
 
   double _dec(double desired, double millis) {
-    double nextCurrent = current - _step(millis);
-
-    if (nextCurrent < desired) {
-      nextCurrent = desired;
-    }
-
-    return nextCurrent;
+    return current - _step(millis);
   }
 
   double _step(double millis) {
