@@ -43,30 +43,51 @@ List<Direction> getDirection(double velocityAngle) {
   return rez;
 }
 
+const double kMinMirroredAngle = math.pi / 4;
+
 double getNextAngle(double obstacleNormalAngle, double velocityAngle) {
-  final double mirrored = 2 * obstacleNormalAngle - velocityAngle - math.pi;
+  double mirrored = 2 * obstacleNormalAngle;
+  mirrored = clamp2pi(mirrored);
+  mirrored = getAngleDelta(mirrored, velocityAngle);
+  mirrored = clamp2pi(mirrored);
+  mirrored = getAngleDelta(mirrored, math.pi);
+  mirrored = clamp2pi(mirrored);
 
-  final double stuckProof = _preventStuck(velocityAngle, mirrored);
+  mirrored = _preventStuck(velocityAngle, mirrored);
 
-  return clamp2pi(stuckProof);
+  return clamp2pi(mirrored);
 }
 
-double _preventStuck(double initialAngle, double calculatedAngle) {
-  const double kMinGoodByeAngle = math.pi / 4;
+double _preventStuck(double initialAngle, double mirroredAngle) {
+  final double delta = getAngleDelta(initialAngle, mirroredAngle);
 
-  final double delta = calculatedAngle - initialAngle;
-
-  if (delta.abs() < kMinGoodByeAngle) {
-    if (calculatedAngle < initialAngle) {
-      calculatedAngle = initialAngle - kMinGoodByeAngle;
-    } else if (calculatedAngle >= initialAngle) {
-      calculatedAngle = initialAngle + kMinGoodByeAngle;
+  if (delta.abs() < math.pi * 1 / 4) {
+    if (delta < 0) {
+      mirroredAngle = getAngleDelta(initialAngle, kMinMirroredAngle);
+    } else {
+      mirroredAngle = getAngleDelta(initialAngle, -kMinMirroredAngle);
     }
   }
 
-  return calculatedAngle;
+  return mirroredAngle;
 }
 
 double getVectorAngle(Vector v) {
   return clamp2pi(math.atan2(v.y, v.x));
+}
+
+double getAngleDelta(double angle0, double angle1) {
+  double delta = angle1 - angle0;
+
+  final double deltaAbs = delta.abs();
+
+  if (deltaAbs > math.pi) {
+    delta = 2 * math.pi - deltaAbs;
+
+    if (angle1 > angle0) {
+      delta = -delta;
+    }
+  }
+
+  return delta;
 }

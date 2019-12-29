@@ -108,8 +108,8 @@ class Cell extends Actor {
   }
 
   double getCollideResultVectorAngle(Cell cell) {
-//    final double normalVector = getVectorAngle(cellsVector(cell));
-//    return getNextAngle(normalVector, velocityAngle);
+    final double normalVector = getVectorAngle(cellsVector(cell));
+    return getNextAngle(normalVector, velocityAngle);
 
     return getVectorAngle(cellsVector(cell));
   }
