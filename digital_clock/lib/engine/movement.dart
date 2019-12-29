@@ -24,7 +24,7 @@ abstract class CalculateNext<T> {
 class CalculateNextRotation extends CalculateNext<double> {
   CalculateNextRotation({
     double current,
-    this.speed = math.pi,
+    this.speed = math.pi * 1.0,
   }) : super(current: current);
 
   final double speed;
@@ -36,30 +36,30 @@ class CalculateNextRotation extends CalculateNext<double> {
       return;
     }
 
-    if (current == desired) {
+    if (current.equalAngle(desired)) {
       return;
     }
 
     double nextCurrent;
 
     final double delta = getAngleDelta(current, desired);
-    if (delta < 0) {
-      nextCurrent = _dec(desired, millis);
-    } else {
-      nextCurrent = _add(desired, millis);
-    }
+
+    nextCurrent = _calcNext(delta, millis);
+
     current = clamp2pi(nextCurrent);
   }
 
-  double _add(double desired, double millis) {
-    return current + _step(millis);
-  }
-
-  double _dec(double desired, double millis) {
-    return current - _step(millis);
+  double _calcNext(double delta, double millis) {
+    return current + delta * _step(millis);
   }
 
   double _step(double millis) {
     return speed * millis / 1000;
+  }
+}
+
+extension on double {
+  bool equalAngle(double other) {
+    return (other - this).abs() < 0.03;
   }
 }
