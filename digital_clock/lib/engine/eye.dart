@@ -6,8 +6,6 @@ import 'package:flutter/foundation.dart';
 
 import 'actor.dart';
 
-const double _kEyeRollSpeed = 1.5 * 2 * math.pi;
-
 class Eye extends Actor {
   Eye({
     @required String name,
@@ -21,6 +19,9 @@ class Eye extends Actor {
           image: Assets.instance.eyeImage,
         );
 
+  double _nextRollTime = 0;
+  double _accumulatedRollTime = 0;
+
   @override
   void update(Actor root, double millis) {
     if (millis > 100) {
@@ -28,8 +29,6 @@ class Eye extends Actor {
     }
 
     _eyeRoll(millis);
-
-    movement.rotation.next(rotation, millis);
 
     super.update(root, millis);
   }
@@ -39,11 +38,8 @@ class Eye extends Actor {
 
     if (_accumulatedRollTime >= _nextRollTime) {
       _nextRollTime = math.Random.secure().nextDouble() * 1200 + 300;
-      rotation = math.Random.secure().nextDouble() * 3 - 1.5;
+      velocityAngle = math.Random.secure().nextDouble() * 3 - 1.5;
       _accumulatedRollTime = 0;
     }
   }
-
-  double _nextRollTime = 0;
-  double _accumulatedRollTime = 0;
 }

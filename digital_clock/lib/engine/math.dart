@@ -91,3 +91,35 @@ double getAngleDelta(double angle0, double angle1) {
 
   return delta;
 }
+
+extension on double {
+  bool equalAngle(double other) {
+    return (other - this).abs() < 0.03;
+  }
+}
+
+double nextAngle(
+  double current,
+  double desired,
+  double millis, [
+  double speed = math.pi,
+]) {
+  if (current == null) {
+    current = desired;
+    return desired;
+  }
+
+  if (current.equalAngle(desired)) {
+    return desired;
+  }
+
+  double nextCurrent;
+
+  final double delta = getAngleDelta(current, desired);
+
+  final double frameStep = delta * speed * millis / 1000;
+
+  nextCurrent = current + frameStep;
+
+  return clamp2pi(nextCurrent);
+}

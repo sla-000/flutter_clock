@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
-import 'package:digital_clock/engine/movement.dart';
+import 'package:digital_clock/engine/math.dart';
 import 'package:digital_clock/engine/vector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
@@ -25,18 +25,17 @@ abstract class Actor implements Update, Draw {
     @required this.size,
     this.scale,
     this.pivot,
-    this.rotation,
-    this.velocity,
+    this.angle,
+    this.velocityModule,
     this.velocityAngle,
     this.colorFilter,
     this.image,
   }) {
     scale ??= Vector.one();
     pivot ??= Vector(x: size.x / 2, y: size.y / 2);
-    velocity ??= 0;
-    rotation ??= 0;
+    velocityModule ??= 0;
     velocityAngle ??= 0;
-    movement.rotation.current = rotation;
+    angle ??= velocityAngle;
   }
 
   final String name;
@@ -44,14 +43,12 @@ abstract class Actor implements Update, Draw {
   Vector size;
   Vector pivot;
   Vector scale;
-  double rotation;
-  double velocity;
+  double angle;
+  double velocityModule;
   double velocityAngle;
   ColorFilter colorFilter;
   ui.Image image;
   Offset acceleration;
-
-  final Movement movement = Movement();
 
   double maxRotationSpeed = _kRotationSpeed;
 
@@ -60,10 +57,12 @@ abstract class Actor implements Update, Draw {
   @override
   @mustCallSuper
   void update(Actor root, double millis) {
-    if (velocity != 0) {
-      position.x += velocity * math.cos(velocityAngle) * millis / 1000;
-      position.y += velocity * math.sin(velocityAngle) * millis / 1000;
+    if (velocityModule != 0) {
+      position.x += velocityModule * math.cos(velocityAngle) * millis / 1000;
+      position.y += velocityModule * math.sin(velocityAngle) * millis / 1000;
     }
+
+    angle = nextAngle(angle, velocityAngle, millis);
 
     final List<Actor> tempActors = List<Actor>.of(children, growable: false);
 
@@ -78,7 +77,7 @@ abstract class Actor implements Update, Draw {
 
     canvas.translate(position.x, position.y);
 
-    canvas.rotate(movement.rotation.current);
+    canvas.rotate(angle);
 
     canvas.scale(scale.x ?? 1, scale.y ?? 1);
 
@@ -118,20 +117,10 @@ abstract class Actor implements Update, Draw {
     return 'Actor{name: $name, '
         'position: $position, '
         'size: $size, '
-        'velocity: $velocity, '
+        'velocityModule: $velocityModule, '
         'velocityAngle: $velocityAngle, '
         'scale: $scale, '
-        'rotation: $rotation, '
-        'movement: $movement, '
+        'angle: $angle, '
         'children: $children}';
-  }
-}
-
-extension Equals on double {
-  bool equals(
-    double value, {
-    double delta = 0.0,
-  }) {
-    return (this >= (value - delta)) && (this <= (value + delta));
   }
 }

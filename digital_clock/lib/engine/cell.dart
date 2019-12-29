@@ -25,8 +25,8 @@ class Cell extends Actor {
           position: position,
           size: Vector(x: 40, y: 40),
           scale: scale,
-          rotation: rotation,
-          velocity: velocity ?? 100,
+          angle: rotation,
+          velocityModule: velocity ?? 100,
           velocityAngle: velocityAngle ?? 0.5,
           image: Assets.instance.bodyImage,
         ) {
@@ -56,15 +56,7 @@ class Cell extends Actor {
   void update(Actor root, double millis) {
     _collisions(root);
 
-    _move(root, millis);
-
-    movement.rotation.next(velocityAngle, millis);
-
     super.update(root, millis);
-  }
-
-  void _move(Actor root, double millis) {
-    rotation -= 0.2 * 2 * 3.1415 * (millis / 1000);
   }
 
   void _collisions(Actor root) {
