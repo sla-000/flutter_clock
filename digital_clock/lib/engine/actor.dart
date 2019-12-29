@@ -1,12 +1,11 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:digital_clock/config.dart';
 import 'package:digital_clock/engine/math.dart';
 import 'package:digital_clock/engine/vector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
-
-import '../config.dart';
 
 abstract class Update {
   void update(Actor root, double millis);
