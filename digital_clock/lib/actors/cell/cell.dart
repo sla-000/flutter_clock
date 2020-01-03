@@ -62,11 +62,9 @@ class Cell extends Actor {
   }
 
   void _approachManna(Actor root) {
-    final Vector mannaVector = _findClosestMannas(root).reduce(
-        (Vector vector0, Vector vector1) => getVectorsSum(vector0, vector1));
+    final Vector mannaVector = _findClosestManna(root);
 
-    final Vector cellVector = _findClosestCells(root).reduce(
-        (Vector vector0, Vector vector1) => getVectorsSum(vector0, vector1));
+    final Vector cellVector = _findClosestCells(root);
 
     final Vector finalVector = getVectorsSum(mannaVector, -cellVector);
 
@@ -74,23 +72,21 @@ class Cell extends Actor {
         getAngleDelta(velocityAngle, getVectorAngle(finalVector)) / 10;
   }
 
-  List<Vector> _findClosestMannas(Actor root) {
+  Vector _findClosestManna(Actor root) {
     double minDistance = double.infinity;
-    Vector mannaVector1 = Vector.zero();
-    Vector mannaVector2 = Vector.zero();
+    Vector mannaVector = Vector.zero();
 
     root.children.whereType<Manna>().forEach((Manna manna) {
       final double calculatedDistance = distance(manna);
       if (calculatedDistance < minDistance) {
         minDistance = calculatedDistance;
 
-        mannaVector2 = mannaVector1;
-        mannaVector1 = manna.deltaVector(this) *
+        mannaVector = manna.deltaVector(this) *
             _getMannaDistanceKoeff(calculatedDistance);
       }
     });
 
-    return <Vector>[mannaVector1, mannaVector2];
+    return mannaVector;
   }
 
   double _getMannaDistanceKoeff(double distance) {
@@ -101,30 +97,29 @@ class Cell extends Actor {
     return -distance / 1000 + 1;
   }
 
-  List<Vector> _findClosestCells(Actor root) {
+  Vector _findClosestCells(Actor root) {
     double minDistance = double.infinity;
-    Vector cellVector1 = Vector.zero();
-    Vector cellVector2 = Vector.zero();
+    Vector cellVector = Vector.zero();
 
     root.children.whereType<Cell>().forEach((Cell cell) {
       final double calculatedDistance = distance(cell);
       if (calculatedDistance < minDistance) {
         minDistance = calculatedDistance;
-        cellVector2 = cellVector1;
-        cellVector1 =
+
+        cellVector =
             cell.deltaVector(this) * _getCellDistanceKoeff(calculatedDistance);
       }
     });
 
-    return <Vector>[cellVector1, cellVector2];
+    return cellVector;
   }
 
   double _getCellDistanceKoeff(double distance) {
-    if (distance > 300) {
+    if (distance > 200) {
       return 0;
     }
 
-    return -distance / 300 + 1;
+    return -distance / 200 + 1;
   }
 
   void _collisions(Actor root) {
