@@ -10,19 +10,22 @@ import 'manna.dart';
 
 final Logger _log = Logger('Scene')..level = Level.FINEST;
 
+const double kSizeX = 1000;
+const double kSizeY = 2000;
+
 class Scene extends Actor {
   Scene({
     @required String name,
   }) : super(
           name: 'scene-$name',
           position: Vector.zero(),
-          size: Vector(x: 500, y: 1000),
+          size: Vector(x: kSizeX, y: kSizeY),
           image: null,
         ) {
-    for (int q = 100; q <= 900; q += 100) {
+    for (int q = 100; q <= 1900; q += 50) {
       children.add(Manna(
         name: '$q',
-        position: Vector(x: 250, y: q.toDouble()),
+        position: Vector(x: 500, y: q.toDouble()),
       ));
     }
 
@@ -54,7 +57,7 @@ class Scene extends Actor {
 //
 //    return;
 
-    for (double q = 100; q <= 400; q += 100) {
+    for (double q = 100; q <= 900; q += 100) {
       final double scale = math.Random.secure().nextDouble() * 1 + 1;
 
       if (q == 100) {
@@ -66,25 +69,25 @@ class Scene extends Actor {
           name: 'top-$q',
           position: Vector(x: q, y: 100),
           scale: Vector.both(scale),
-          rotation: math.Random.secure().nextDouble() * 2 * math.pi,
+          angle: math.Random.secure().nextDouble() * 2 * math.pi,
         ),
       );
     }
 
-    for (double q = 100; q <= 400; q += 100) {
+    for (double q = 100; q <= 900; q += 100) {
       final double scale = math.Random.secure().nextDouble() * 1 + 1;
 
       children.add(
         Cell(
           name: 'bottom-$q',
-          position: Vector(x: q, y: 900),
+          position: Vector(x: q, y: 1900),
           scale: Vector.both(scale),
-          rotation: math.Random.secure().nextDouble() * 2 * math.pi,
+          angle: math.Random.secure().nextDouble() * 2 * math.pi,
         ),
       );
     }
 
-    for (double q = 200; q <= 800; q += 100) {
+    for (double q = 200; q <= 1800; q += 100) {
       final double scale = math.Random.secure().nextDouble() * 1 + 1;
 
       children.add(
@@ -92,20 +95,20 @@ class Scene extends Actor {
           name: 'left-$q',
           position: Vector(x: 100, y: q),
           scale: Vector.both(scale),
-          rotation: math.Random.secure().nextDouble() * 2 * math.pi,
+          angle: math.Random.secure().nextDouble() * 2 * math.pi,
         ),
       );
     }
 
-    for (double q = 200; q <= 800; q += 100) {
+    for (double q = 200; q <= 1800; q += 100) {
       final double scale = math.Random.secure().nextDouble() * 1 + 1;
 
       children.add(
         Cell(
           name: 'right-$q',
-          position: Vector(x: 400, y: q),
+          position: Vector(x: 900, y: q),
           scale: Vector.both(scale),
-          rotation: math.Random.secure().nextDouble() * 2 * math.pi,
+          angle: math.Random.secure().nextDouble() * 2 * math.pi,
         ),
       );
     }

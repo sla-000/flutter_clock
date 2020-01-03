@@ -103,6 +103,22 @@ abstract class Actor implements Update, Draw {
     canvas.restore();
   }
 
+  Vector deltaVector(Actor otherActor) {
+    return Vector(
+      x: position.x - otherActor.position.x,
+      y: position.y - otherActor.position.y,
+    );
+  }
+
+  double distance(Actor other) {
+    final double dx = other.position.x - position.x;
+    final double dy = other.position.y - position.y;
+
+    return math.sqrt(math.pow(dx, 2) + math.pow(dy, 2));
+  }
+
+  double radius() => (size.x * scale.x + size.y * scale.y) / 4;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

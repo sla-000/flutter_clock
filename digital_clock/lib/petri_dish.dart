@@ -148,7 +148,7 @@ class _DrawingWidgetState extends State<DrawingWidget> {
         delta: delta_ms,
         updateDisplay: updateDisplay.sink,
       ),
-      size: const Size(500, 1000),
+      size: const Size(kSizeX, kSizeY),
     );
   }
 }

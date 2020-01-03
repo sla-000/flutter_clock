@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:digital_clock/actors/cell/eye.dart';
 import 'package:digital_clock/actors/cell/tail.dart';
+import 'package:digital_clock/actors/manna.dart';
 import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/math.dart';
 import 'package:digital_clock/engine/vector.dart';
@@ -16,7 +17,7 @@ class Cell extends Actor {
     @required String name,
     @required Vector position,
     Vector scale,
-    double rotation,
+    double angle,
     double velocity,
     double velocityAngle,
   }) : super(
@@ -24,12 +25,12 @@ class Cell extends Actor {
           position: position,
           size: Vector(x: 40, y: 40),
           scale: scale,
-          angle: rotation,
+          angle: angle,
           velocityModule: velocity ?? 100,
           velocityAngle: velocityAngle ?? 0.5,
           image: Assets.instance.bodyImage,
         ) {
-    rotation ??= 0;
+    angle ??= 0;
 
     tail = Tail(
       name: name,
@@ -53,9 +54,33 @@ class Cell extends Actor {
 
   @override
   void update(Actor root, double millis) {
+    _approachManna(root);
+
     _collisions(root);
 
     super.update(root, millis);
+  }
+
+  void _approachManna(Actor root) {
+    final Vector mannaVector = _findClosestManna(root);
+
+    velocityAngle +=
+        getAngleDelta(velocityAngle, getVectorAngle(mannaVector)) / 5;
+  }
+
+  Vector _findClosestManna(Actor root) {
+    double minDistance = double.infinity;
+    Vector mannaVector;
+
+    root.children.whereType<Manna>().forEach((Manna manna) {
+      final double calculatedDistance = distance(manna);
+      if (calculatedDistance < minDistance) {
+        minDistance = calculatedDistance;
+        mannaVector = manna.deltaVector(this);
+      }
+    });
+
+    return mannaVector;
   }
 
   void _collisions(Actor root) {
@@ -101,22 +126,6 @@ class Cell extends Actor {
   }
 
   double getCollideResultVectorAngle(Cell cell) {
-    return getVectorAngle(cellsDeltaVector(cell));
+    return getVectorAngle(deltaVector(cell));
   }
-
-  Vector cellsDeltaVector(Cell otherCell) {
-    return Vector(
-      x: position.x - otherCell.position.x,
-      y: position.y - otherCell.position.y,
-    );
-  }
-
-  double distance(Actor other) {
-    final double dx = other.position.x - position.x;
-    final double dy = other.position.y - position.y;
-
-    return math.sqrt(math.pow(dx, 2) + math.pow(dy, 2));
-  }
-
-  double radius() => (size.x * scale.x + size.y * scale.y) / 4;
 }
