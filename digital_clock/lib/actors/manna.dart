@@ -2,7 +2,7 @@ import 'package:digital_clock/engine/vector.dart';
 import 'package:digital_clock/utils/assets.dart';
 import 'package:flutter/foundation.dart';
 
-import 'actor.dart';
+import '../engine/actor.dart';
 
 class Manna extends Actor {
   Manna({

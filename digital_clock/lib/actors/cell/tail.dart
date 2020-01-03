@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
-import 'actor.dart';
+import '../../engine/actor.dart';
 
 class Tail extends Actor {
   Tail({

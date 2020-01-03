@@ -4,8 +4,8 @@ import 'package:digital_clock/engine/vector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
-import 'actor.dart';
-import 'cell.dart';
+import '../engine/actor.dart';
+import 'cell/cell.dart';
 import 'manna.dart';
 
 final Logger _log = Logger('Scene')..level = Level.FINEST;

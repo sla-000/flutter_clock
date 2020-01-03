@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
+import 'actors/scene.dart';
 import 'engine/actor.dart';
-import 'engine/scene.dart';
 import 'utils/assets.dart';
 import 'utils/delta.dart';
 import 'utils/fps.dart';

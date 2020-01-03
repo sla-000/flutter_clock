@@ -1,14 +1,13 @@
 import 'dart:math' as math;
 
+import 'package:digital_clock/actors/cell/eye.dart';
+import 'package:digital_clock/actors/cell/tail.dart';
+import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/math.dart';
-import 'package:digital_clock/engine/tail.dart';
 import 'package:digital_clock/engine/vector.dart';
 import 'package:digital_clock/utils/assets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
-
-import 'actor.dart';
-import 'eye.dart';
 
 final Logger _log = Logger('Cell')..level = Level.FINEST;
 

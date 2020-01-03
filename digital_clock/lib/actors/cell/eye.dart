@@ -1,10 +1,9 @@
 import 'dart:math' as math;
 
+import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/vector.dart';
 import 'package:digital_clock/utils/assets.dart';
 import 'package:flutter/foundation.dart';
-
-import 'actor.dart';
 
 class Eye extends Actor {
   Eye({
