@@ -19,6 +19,10 @@ class Vector {
 
   double get length => math.sqrt(x * x + y * y);
 
+  Vector operator *(double value) => Vector(x: x * value, y: y * value);
+
+  Vector operator -() => Vector(x: -x, y: -y);
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

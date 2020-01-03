@@ -92,6 +92,13 @@ double getAngleDelta(double angle0, double angle1) {
   return delta;
 }
 
+Vector getVectorsSum(Vector vector0, Vector vector1) {
+  return Vector(
+    x: vector0.x + vector1.x,
+    y: vector0.y + vector1.y,
+  );
+}
+
 extension on double {
   bool equalAngle(double other) {
     return getAngleDelta(other, this).abs() < 0.03;
