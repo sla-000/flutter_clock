@@ -63,6 +63,8 @@ class _DigitalClockState extends State<DigitalClock> {
     Future<void>(() {
       Assets.instance.load();
     });
+
+    _updateTime();
   }
 
   void _loggerInit() {

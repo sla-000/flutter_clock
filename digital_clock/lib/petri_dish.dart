@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
-import 'actors/scene.dart';
+import 'actors/scene/scene.dart';
 import 'engine/actor.dart';
 import 'utils/assets.dart';
 import 'utils/delta.dart';
@@ -28,7 +28,7 @@ class PetriDish extends StatefulWidget {
 }
 
 class _PetriDishState extends State<PetriDish> {
-  Actor scene;
+  Scene scene;
 
   @override
   void initState() {
@@ -38,6 +38,8 @@ class _PetriDishState extends State<PetriDish> {
     widget.valueNotifier.addListener(() {
       _log.finest(() =>
           'valueNotifier: key=${widget.key}, value=${widget.valueNotifier.value}');
+
+      scene.setDigit(widget.valueNotifier.value);
     });
   }
 
@@ -51,6 +53,10 @@ class _PetriDishState extends State<PetriDish> {
         }
 
         scene ??= Scene(name: widget.name);
+
+        if (widget.valueNotifier.value != null) {
+          scene.setDigit(widget.valueNotifier.value);
+        }
 
         return AspectRatio(
           aspectRatio: 1 / 2,

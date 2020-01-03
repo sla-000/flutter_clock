@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:digital_clock/actors/cell/eye.dart';
 import 'package:digital_clock/actors/cell/tail.dart';
-import 'package:digital_clock/actors/manna.dart';
+import 'package:digital_clock/actors/scene/manna.dart';
 import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/math.dart';
 import 'package:digital_clock/engine/vector.dart';
@@ -56,10 +56,14 @@ class Cell extends Actor {
   void update(Actor root, double millis) {
     _approachManna(root);
 
+    _processEating(root);
+
     _collisions(root);
 
     super.update(root, millis);
   }
+
+  void _processEating(Actor root) {} // todo _processEating
 
   void _approachManna(Actor root) {
     final Vector mannaVector = _findClosestManna(root);
