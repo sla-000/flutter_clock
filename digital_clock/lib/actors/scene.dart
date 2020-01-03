@@ -22,10 +22,17 @@ class Scene extends Actor {
           size: Vector(x: kSizeX, y: kSizeY),
           image: null,
         ) {
-    for (int q = 100; q <= 1900; q += 50) {
+    for (int q = 50; q <= 400; q += 50) {
       children.add(Manna(
-        name: '$q',
-        position: Vector(x: 500, y: q.toDouble()),
+        name: '1a-$q',
+        position: Vector(x: 600 - q.toDouble(), y: 200 + q.toDouble()),
+      ));
+    }
+
+    for (int q = 200; q <= 1800; q += 50) {
+      children.add(Manna(
+        name: '1-$q',
+        position: Vector(x: 600, y: q.toDouble()),
       ));
     }
 
