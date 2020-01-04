@@ -1,5 +1,5 @@
+import 'package:digital_clock/actors/scene/digits/utils.dart';
 import 'package:digital_clock/actors/scene/scene.dart';
-import 'package:digital_clock/actors/scene/utils.dart';
 import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/vector.dart';
 

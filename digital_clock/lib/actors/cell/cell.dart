@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:digital_clock/actors/cell/eye.dart';
 import 'package:digital_clock/actors/cell/tail.dart';
-import 'package:digital_clock/actors/scene/manna.dart';
+import 'package:digital_clock/actors/scene/digits/manna.dart';
 import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/math.dart';
 import 'package:digital_clock/engine/vector.dart';

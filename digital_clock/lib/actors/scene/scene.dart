@@ -9,7 +9,7 @@ import 'package:digital_clock/actors/scene/digits/6.dart';
 import 'package:digital_clock/actors/scene/digits/7.dart';
 import 'package:digital_clock/actors/scene/digits/8.dart';
 import 'package:digital_clock/actors/scene/digits/9.dart';
-import 'package:digital_clock/actors/scene/manna.dart';
+import 'package:digital_clock/actors/scene/digits/manna.dart';
 import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/vector.dart';
 import 'package:flutter/foundation.dart';
