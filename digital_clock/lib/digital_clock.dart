@@ -105,6 +105,10 @@ class _DigitalClockState extends State<DigitalClock> {
   }
 
   void _updateModel() {
+    if (!mounted) {
+      return;
+    }
+
     setState(() {
       // Cause the clock to rebuild when the model changes.
     });

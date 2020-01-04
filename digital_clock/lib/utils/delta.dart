@@ -1,11 +1,14 @@
 class Delta {
   int _lastMillis;
 
-  int calculate(int millis) {
+  int calculate(
+    int millis, {
+    bool ignore = false,
+  }) {
     _lastMillis ??= millis;
     final int delta = millis - _lastMillis;
     _lastMillis = millis;
 
-    return delta;
+    return ignore ? 0 : delta;
   }
 }

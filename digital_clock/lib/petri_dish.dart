@@ -44,6 +44,12 @@ class _PetriDishState extends State<PetriDish> {
   }
 
   @override
+  void dispose() {
+    _log.finest(() => 'dispose: key=${widget.key}');
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
       valueListenable: Assets.instance.loaded,
@@ -105,8 +111,8 @@ class DrawingWidget extends StatefulWidget {
   _DrawingWidgetState createState() => _DrawingWidgetState();
 }
 
-class _DrawingWidgetState extends State<DrawingWidget> {
-  int lastMillis;
+class _DrawingWidgetState extends State<DrawingWidget>
+    with WidgetsBindingObserver {
   Delta delta = Delta();
   Fps fps;
   double lastFps = 0;
@@ -117,16 +123,23 @@ class _DrawingWidgetState extends State<DrawingWidget> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     if (widget.calculateFps ?? false) {
       fps = Fps();
 
-      fpsDisplayTimer = Timer.periodic(Duration(seconds: 10), (_) {
+      fpsDisplayTimer = Timer.periodic(const Duration(seconds: 10), (_) {
         debugPrint('fps=${lastFps.round()}');
       });
     }
 
-    updateDisplay.stream.listen((_) => setState(() {}));
+    updateDisplay.stream.listen((_) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {});
+    });
   }
 
   @override
@@ -135,23 +148,38 @@ class _DrawingWidgetState extends State<DrawingWidget> {
       fpsDisplayTimer.cancel();
     }
 
+    updateDisplay.close();
+
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    final int millis = DateTime.now().millisecondsSinceEpoch;
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
 
-    final int delta_ms = delta.calculate(millis);
+    if (state == AppLifecycleState.resumed) {
+      _log.finest(() => 'didChangeAppLifecycleState: resumed');
+      delta.calculate(
+        DateTime.now().millisecondsSinceEpoch,
+        ignore: true,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final int deltaMillis =
+        delta.calculate(DateTime.now().millisecondsSinceEpoch);
 
     if (widget.calculateFps ?? false) {
-      lastFps = fps.calculate(delta_ms);
+      lastFps = fps.calculate(deltaMillis);
     }
 
     return CustomPaint(
       painter: PetriPainter(
         scene: widget.scene,
-        delta: delta_ms,
+        delta: deltaMillis,
         updateDisplay: updateDisplay.sink,
       ),
       size: const Size(kSizeX, kSizeY),
@@ -175,7 +203,9 @@ class PetriPainter extends CustomPainter {
     scene.draw(canvas);
 
     Future<void>(() {
-      scene.update(scene, delta.toDouble());
+      if (delta != 0) {
+        scene.update(scene, delta.toDouble());
+      }
 
       updateDisplay.add(null);
     });
