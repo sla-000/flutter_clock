@@ -19,7 +19,17 @@ class Vector {
 
   double get length => math.sqrt(x * x + y * y);
 
+  Vector reduceToLength(double value) {
+    final double normalizer = length / value;
+    return this / normalizer;
+  }
+
   Vector operator *(double value) => Vector(x: x * value, y: y * value);
+  Vector operator /(double value) => Vector(x: x / value, y: y / value);
+
+  Vector operator -(Vector value) => Vector(x: x - value.x, y: y - value.y);
+
+  Vector operator +(Vector value) => Vector(x: x + value.x, y: y + value.y);
 
   Vector operator -() => Vector(x: -x, y: -y);
 

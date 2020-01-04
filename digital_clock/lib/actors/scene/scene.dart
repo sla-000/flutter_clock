@@ -30,18 +30,19 @@ class Scene extends Actor {
 
   void setDigit(int digit) {
     assert(digit >= 0 && digit <= 9);
+
     final Map<int, void Function(List<Actor>)> digit2func =
         <int, void Function(List<Actor>)>{
       0: set0,
       1: set1,
-      2: set0, // todo Digit function
-      3: set1, // todo Digit function
-      4: set0, // todo Digit function
-      5: set1, // todo Digit function
-      6: set0, // todo Digit function
+      2: set7, // todo Digit function
+      3: set7, // todo Digit function
+      4: set7, // todo Digit function
+      5: set7, // todo Digit function
+      6: set7, // todo Digit function
       7: set7,
       8: set8,
-      9: set1, // todo Digit function
+      9: set7, // todo Digit function
     };
 
     children.removeWhere((Actor actor) => actor is Manna);
