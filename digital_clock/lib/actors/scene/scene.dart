@@ -1,7 +1,13 @@
 import 'package:digital_clock/actors/scene/0.dart';
 import 'package:digital_clock/actors/scene/1.dart';
+import 'package:digital_clock/actors/scene/2.dart';
+import 'package:digital_clock/actors/scene/3.dart';
+import 'package:digital_clock/actors/scene/4.dart';
+import 'package:digital_clock/actors/scene/5.dart';
+import 'package:digital_clock/actors/scene/6.dart';
 import 'package:digital_clock/actors/scene/7.dart';
 import 'package:digital_clock/actors/scene/8.dart';
+import 'package:digital_clock/actors/scene/9.dart';
 import 'package:digital_clock/actors/scene/cells.dart';
 import 'package:digital_clock/actors/scene/manna.dart';
 import 'package:digital_clock/engine/actor.dart';
@@ -35,14 +41,14 @@ class Scene extends Actor {
         <int, void Function(List<Actor>)>{
       0: set0,
       1: set1,
-      2: set7, // todo Digit function
-      3: set7, // todo Digit function
-      4: set7, // todo Digit function
-      5: set7, // todo Digit function
-      6: set7, // todo Digit function
+      2: set2,
+      3: set3,
+      4: set4,
+      5: set5,
+      6: set6,
       7: set7,
       8: set8,
-      9: set7, // todo Digit function
+      9: set9,
     };
 
     children.removeWhere((Actor actor) => actor is Manna);
