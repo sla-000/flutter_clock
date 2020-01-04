@@ -4,7 +4,7 @@ import 'package:digital_clock/actors/cell/cell.dart';
 import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/vector.dart';
 
-void setCells(List<Actor> children) {
+void initCells(List<Actor> children) {
   for (double q = 100; q <= 900; q += 100) {
     final double scale = math.Random.secure().nextDouble() * 1 + 1;
 

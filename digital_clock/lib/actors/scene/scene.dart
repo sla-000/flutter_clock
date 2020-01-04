@@ -1,14 +1,14 @@
-import 'package:digital_clock/actors/scene/0.dart';
-import 'package:digital_clock/actors/scene/1.dart';
-import 'package:digital_clock/actors/scene/2.dart';
-import 'package:digital_clock/actors/scene/3.dart';
-import 'package:digital_clock/actors/scene/4.dart';
-import 'package:digital_clock/actors/scene/5.dart';
-import 'package:digital_clock/actors/scene/6.dart';
-import 'package:digital_clock/actors/scene/7.dart';
-import 'package:digital_clock/actors/scene/8.dart';
-import 'package:digital_clock/actors/scene/9.dart';
 import 'package:digital_clock/actors/scene/cells.dart';
+import 'package:digital_clock/actors/scene/digits/0.dart';
+import 'package:digital_clock/actors/scene/digits/1.dart';
+import 'package:digital_clock/actors/scene/digits/2.dart';
+import 'package:digital_clock/actors/scene/digits/3.dart';
+import 'package:digital_clock/actors/scene/digits/4.dart';
+import 'package:digital_clock/actors/scene/digits/5.dart';
+import 'package:digital_clock/actors/scene/digits/6.dart';
+import 'package:digital_clock/actors/scene/digits/7.dart';
+import 'package:digital_clock/actors/scene/digits/8.dart';
+import 'package:digital_clock/actors/scene/digits/9.dart';
 import 'package:digital_clock/actors/scene/manna.dart';
 import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/vector.dart';
@@ -29,27 +29,25 @@ class Scene extends Actor {
           size: Vector(x: kSizeX, y: kSizeY),
           image: null,
         ) {
-    setCells(children);
-
-    setDigit(0); // todo Remove
+    initCells(children);
   }
+
+  static const Map<int, void Function(List<Actor>)> digit2func =
+      <int, void Function(List<Actor>)>{
+    0: set0,
+    1: set1,
+    2: set2,
+    3: set3,
+    4: set4,
+    5: set5,
+    6: set6,
+    7: set7,
+    8: set8,
+    9: set9,
+  };
 
   void setDigit(int digit) {
     assert(digit >= 0 && digit <= 9);
-
-    final Map<int, void Function(List<Actor>)> digit2func =
-        <int, void Function(List<Actor>)>{
-      0: set0,
-      1: set1,
-      2: set2,
-      3: set3,
-      4: set4,
-      5: set5,
-      6: set6,
-      7: set7,
-      8: set8,
-      9: set9,
-    };
 
     children.removeWhere((Actor actor) => actor is Manna);
 
