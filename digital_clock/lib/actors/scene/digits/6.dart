@@ -7,7 +7,7 @@ void set6(List<Actor> children) {
   mannaLine(
     children,
     Vector(x: 200, y: kSizeY / 2),
-    Vector(x: kSizeX - 200, y: 200),
+    Vector(x: kSizeX / 2, y: 200),
   );
 
   mannaLine(
