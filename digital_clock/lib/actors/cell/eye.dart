@@ -7,11 +7,9 @@ import 'package:flutter/foundation.dart';
 
 class Eye extends Actor {
   Eye({
-    @required String name,
     @required Vector position,
     Vector scale,
   }) : super(
-          name: 'eye-$name',
           position: position,
           size: Vector(x: 10, y: 10),
           scale: scale,

@@ -14,6 +14,8 @@ class Vector {
 
   Vector.one() : this(x: 1, y: 1);
 
+  Vector.copy(Vector v) : this(x: v.x, y: v.y);
+
   double x;
   double y;
 

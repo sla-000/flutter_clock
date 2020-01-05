@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:digital_clock/actors/cell/eye.dart';
 import 'package:digital_clock/actors/cell/tail.dart';
+import 'package:digital_clock/actors/life/life.dart';
 import 'package:digital_clock/actors/scene/digits/manna.dart';
 import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/math.dart';
@@ -14,17 +15,15 @@ final Logger _log = Logger('Cell')..level = Level.FINEST;
 
 class Cell extends Actor {
   Cell({
-    @required String name,
     @required Vector position,
     Vector scale,
     double angle,
     double velocity,
     double velocityAngle,
   }) : super(
-          name: 'cell-$name',
           position: position,
           size: Vector(x: 40, y: 40),
-          scale: scale,
+          scale: scale ?? Vector.both(1.0),
           angle: angle,
           velocityModule: velocity ?? 100,
           velocityAngle: velocityAngle ?? 0.5,
@@ -33,27 +32,33 @@ class Cell extends Actor {
     angle ??= 0;
 
     tail = Tail(
-      name: name,
       position: Vector(x: -22, y: 0),
-      scale: scale,
+      scale: this.scale,
     );
     children.add(tail);
 
     eye = Eye(
-      name: name,
       position: Vector(x: 8, y: 0),
-      scale: Vector(x: 1.2 / scale.x + 0.8, y: 1.2 / scale.y + 0.8),
+      scale: Vector(x: 1.2 / this.scale.x + 0.8, y: 1.2 / this.scale.y + 0.8),
     );
-
     children.add(eye);
+
+    life = Life();
   }
 
   Actor eye;
 
   Actor tail;
 
+  Life life;
+
+  /// 1-total fade out, 0-normal
+  double fade;
+
   @override
   void update(Actor root, double millis) {
+    life.live(root, this, millis);
+
     _approachManna(root);
 
     _processEating(root);

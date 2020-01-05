@@ -5,10 +5,8 @@ import 'package:flutter/foundation.dart';
 
 class Manna extends Actor {
   Manna({
-    @required String name,
     @required Vector position,
   }) : super(
-          name: 'manna-$name',
           position: position,
           size: Vector(x: 10, y: 10),
           image: Assets.instance.mannaImage,

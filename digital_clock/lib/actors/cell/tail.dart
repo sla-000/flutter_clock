@@ -1,18 +1,15 @@
+import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/vector.dart';
 import 'package:digital_clock/utils/assets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
-import '../../engine/actor.dart';
-
 class Tail extends Actor {
   Tail({
-    @required String name,
     @required Vector position,
     Vector scale,
   }) : super(
-          name: 'tail-$name',
           position: position,
           size: Vector(x: 6, y: 6),
           scale: scale,

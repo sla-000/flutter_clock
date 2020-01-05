@@ -19,7 +19,6 @@ const double _kRotationSpeed = 0.5 * 2 * math.pi; // rad in second
 
 abstract class Actor implements Update, Draw {
   Actor({
-    @required this.name,
     @required this.position,
     @required this.size,
     this.scale,
@@ -37,7 +36,6 @@ abstract class Actor implements Update, Draw {
     angle ??= velocityAngle;
   }
 
-  final String name;
   Vector position;
   Vector size;
   Vector pivot;
@@ -122,15 +120,23 @@ abstract class Actor implements Update, Draw {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Actor && runtimeType == other.runtimeType && name == other.name;
+      other is Actor &&
+          runtimeType == other.runtimeType &&
+          position == other.position &&
+          scale == other.scale &&
+          velocityModule == other.velocityModule &&
+          velocityAngle == other.velocityAngle;
 
   @override
-  int get hashCode => name.hashCode;
+  int get hashCode =>
+      position.hashCode ^
+      scale.hashCode ^
+      velocityModule.hashCode ^
+      velocityAngle.hashCode;
 
   @override
   String toString() {
-    return 'Actor{name: $name, '
-        'position: $position, '
+    return 'Actor{position: $position, '
         'size: $size, '
         'velocityModule: $velocityModule, '
         'velocityAngle: $velocityAngle, '

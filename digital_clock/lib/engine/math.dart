@@ -105,6 +105,10 @@ extension on double {
   }
 }
 
+double oppositeAngle(double angle) {
+  return clamp2pi(angle + math.pi);
+}
+
 double nextAngle(
   double current,
   double desired,
@@ -129,4 +133,18 @@ double nextAngle(
   nextCurrent = current + frameStep;
 
   return clamp2pi(nextCurrent);
+}
+
+double normalize(double current, double min, double max) {
+  assert(max > min);
+
+  if (current < min) {
+    return 0.0;
+  }
+
+  if (current > max) {
+    return 1.0;
+  }
+
+  return (current - min) / (max - min);
 }

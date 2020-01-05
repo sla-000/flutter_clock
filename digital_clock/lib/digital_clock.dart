@@ -134,26 +134,19 @@ class _DigitalClockState extends State<DigitalClock> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        FourDigitsWidget(
-          hHNotifier: _hHNotifier,
-          hLNotifier: _hLNotifier,
-          mHNotifier: _mHNotifier,
-          mLNotifier: _mLNotifier,
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: Opacity(
-            opacity: 0.5,
-            child: FloatingActionButton(
-              mini: true,
-              child: Icon(Icons.refresh),
-              onPressed: () => setState(() {}),
-            ),
+    return Container(
+      color: Colors.black87,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: FourDigitsWidget(
+            hHNotifier: _hHNotifier,
+            hLNotifier: _hLNotifier,
+            mHNotifier: _mHNotifier,
+            mLNotifier: _mLNotifier,
           ),
-        )
-      ],
+        ),
+      ),
     );
   }
 }

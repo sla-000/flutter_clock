@@ -19,7 +19,6 @@ void mannaLine(
     final Vector currentPoint = vector0 + line1 * q;
 
     children.add(Manna(
-      name: 'l-$q',
       position: currentPoint,
     ));
   }

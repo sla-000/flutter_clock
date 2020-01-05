@@ -58,7 +58,7 @@ class _PetriDishState extends State<PetriDish> {
           return child;
         }
 
-        scene ??= Scene(name: widget.name);
+        scene ??= Scene();
 
         if (widget.valueNotifier.value != null) {
           scene.setDigit(widget.valueNotifier.value);

@@ -12,7 +12,6 @@ import 'package:digital_clock/actors/scene/digits/9.dart';
 import 'package:digital_clock/actors/scene/digits/manna.dart';
 import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/vector.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
 final Logger _log = Logger('Scene')..level = Level.FINEST;
@@ -21,10 +20,8 @@ const double kSizeX = 1000;
 const double kSizeY = 2000;
 
 class Scene extends Actor {
-  Scene({
-    @required String name,
-  }) : super(
-          name: 'scene-$name',
+  Scene()
+      : super(
           position: Vector.zero(),
           size: Vector(x: kSizeX, y: kSizeY),
           image: null,
