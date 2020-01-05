@@ -9,6 +9,8 @@ import 'package:digital_clock/engine/math.dart';
 import 'package:digital_clock/engine/vector.dart';
 import 'package:digital_clock/utils/assets.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:logging/logging.dart';
 
 final Logger _log = Logger('Cell')..level = Level.FINEST;
@@ -46,18 +48,28 @@ class Cell extends Actor {
     life = Life();
   }
 
-  Actor eye;
+  Eye eye;
 
-  Actor tail;
+  Tail tail;
 
   Life life;
 
   /// 1-total fade out, 0-normal
-  double fade;
+  double fade = 0;
+
+  void setTired(double tire) {
+    final int greenAlpha = ((1 - tire) * 0x80 + 0x7F).floor();
+    colorFilter = ColorFilter.mode(
+        Color(0xFF81C784).withAlpha(greenAlpha), BlendMode.modulate);
+
+    eye.setTired(fade);
+  }
 
   @override
   void update(Actor root, double millis) {
     life.live(root, this, millis);
+
+    setTired(fade);
 
     _approachManna(root);
 

@@ -4,9 +4,9 @@ import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/math.dart';
 import 'package:digital_clock/engine/vector.dart';
 
-const double kMaxAge = 10000.0;
-const double kGrandfatherAge = kMaxAge - 1000.0;
-const double kMaturityAge = 1000.0;
+const double kMaxAge = 15000.0;
+const double kGrandfatherAge = kMaxAge - 2000.0;
+const double kMaturityAge = 2000.0;
 const double kNextBirth = 500.0;
 
 const double kTooCloseToLiveDistance = 100;

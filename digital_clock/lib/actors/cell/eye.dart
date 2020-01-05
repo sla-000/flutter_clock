@@ -4,6 +4,8 @@ import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/vector.dart';
 import 'package:digital_clock/utils/assets.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 
 class Eye extends Actor {
   Eye({
@@ -15,6 +17,17 @@ class Eye extends Actor {
           scale: scale,
           image: Assets.instance.eyeImage,
         );
+
+  void setTired(double tire) {
+    final int whiteAlpha = ((1 - tire) * 0xFF).floor();
+    final int redAlpha = (tire * 0x80).floor();
+    colorFilter = ColorFilter.mode(
+        Color.alphaBlend(
+          Colors.white.withAlpha(whiteAlpha),
+          Colors.red.withAlpha(redAlpha),
+        ),
+        BlendMode.modulate);
+  }
 
   double _nextRollTime = 0;
   double _accumulatedRollTime = 0;
