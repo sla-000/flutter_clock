@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:digital_clock/actors/cell/cell.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
@@ -10,6 +11,8 @@ import 'utils/delta.dart';
 import 'utils/fps.dart';
 
 final Logger _log = Logger('PetriDish')..level = Level.FINEST;
+
+const int kMinFrameDelta = 33;
 
 class PetriDish extends StatefulWidget {
   const PetriDish({
@@ -129,7 +132,8 @@ class _DrawingWidgetState extends State<DrawingWidget>
       fps = Fps();
 
       fpsDisplayTimer = Timer.periodic(const Duration(seconds: 10), (_) {
-        debugPrint('fps=${lastFps.round()}');
+        final int cells = widget.scene.children.whereType<Cell>().length;
+        debugPrint('fps=${lastFps.round()}. cells=$cells');
       });
     }
 
@@ -169,8 +173,11 @@ class _DrawingWidgetState extends State<DrawingWidget>
 
   @override
   Widget build(BuildContext context) {
-    final int deltaMillis =
-        delta.calculate(DateTime.now().millisecondsSinceEpoch);
+    int deltaMillis = delta.calculate(DateTime.now().millisecondsSinceEpoch);
+
+    if (deltaMillis > kMinFrameDelta) {
+      deltaMillis = kMinFrameDelta;
+    }
 
     if (widget.calculateFps ?? false) {
       lastFps = fps.calculate(deltaMillis);
