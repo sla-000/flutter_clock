@@ -21,10 +21,17 @@ class Vector {
 
   double get length => math.sqrt(x * x + y * y);
 
+  double get angle => math.atan2(y, x);
+
   Vector reduceToLength(double value) {
     final double normalizer = length / value;
     return this / normalizer;
   }
+
+  Vector rotate(double angle) => Vector(
+        x: x * math.cos(angle) - y * math.sin(angle),
+        y: x * math.sin(angle) + y * math.cos(angle),
+      );
 
   Vector operator *(double value) => Vector(x: x * value, y: y * value);
   Vector operator /(double value) => Vector(x: x / value, y: y / value);
@@ -48,6 +55,10 @@ class Vector {
 
   @override
   String toString() {
-    return 'Vector{x: $x, y: $y}';
+    return 'Vector{x: $x, '
+        'y: $y, '
+        'angle: $angle, '
+        'length: $length, '
+        '}';
   }
 }

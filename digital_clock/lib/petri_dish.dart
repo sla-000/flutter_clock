@@ -133,7 +133,7 @@ class _DrawingWidgetState extends State<DrawingWidget>
 
       fpsDisplayTimer = Timer.periodic(const Duration(seconds: 10), (_) {
         final int cells = widget.scene.children.whereType<Cell>().length;
-        debugPrint('fps=${lastFps.round()}. cells=$cells');
+        debugPrint('fps=${lastFps.round()}, cells=$cells');
       });
     }
 
