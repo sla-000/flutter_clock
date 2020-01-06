@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:digital_clock/actors/cell/cell.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
@@ -209,8 +210,10 @@ class PetriPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     scene.draw(canvas);
 
-    Future<void>(() {
+    Future<void>(() async {
       if (delta != 0) {
+        await compute(
+            updateScene, SceneArguments(scene: scene, delta: delta.toDouble()));
         scene.update(scene, delta.toDouble());
       }
 
@@ -222,4 +225,18 @@ class PetriPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;
   }
+}
+
+class SceneArguments {
+  SceneArguments({
+    this.scene,
+    this.delta,
+  });
+
+  Actor scene;
+  double delta;
+}
+
+void updateScene(SceneArguments args) {
+  args.scene.update(args.scene, args.delta);
 }
