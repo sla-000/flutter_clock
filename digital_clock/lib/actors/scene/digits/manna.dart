@@ -12,6 +12,9 @@ class Manna extends Actor {
           position: position,
           size: Vector(x: 10, y: 10),
           image: Assets.instance.mannaImage,
-          colorFilter: ColorFilter.mode(Colors.deepOrange, BlendMode.modulate),
+          colorFilter: ColorFilter.mode(
+            kReleaseMode ? Colors.transparent : Colors.deepOrange,
+            BlendMode.modulate,
+          ),
         );
 }
