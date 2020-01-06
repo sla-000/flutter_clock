@@ -18,17 +18,28 @@ void set1(List<Actor> children) {
 //    Vector(x: kSizeX / 2 - 200, y: 400),
 //  );
 
-  mannaLine(
+  Vector end = mannaCurve(
     children: children,
-    startPosition: Vector(x: kSizeX - 200, y: 200),
-    endPosition: Vector(x: kSizeX - 200, y: kSizeY - 200),
+    startPosition: Vector(x: kSizeX - 200, y: 270),
+    startAngle: 5 / 4 * math.pi,
+    totalDeltaAngle: -math.pi,
+    fragmentsNum: 24,
+  );
+
+  end = mannaLine(
+    children: children,
+    startPosition: end,
+    endPosition: Vector(
+      x: kSizeX - end.x,
+      y: kSizeY - end.y,
+    ),
   );
 
   mannaCurve(
     children: children,
-    startPosition: Vector(x: 220, y: 200),
-    startAngle: 1.2 / 2 * math.pi,
-    totalDeltaAngle: -1.2 / 2 * math.pi,
-    fragmentsNum: 22,
+    startPosition: end,
+    startAngle: 1 / 4 * math.pi,
+    totalDeltaAngle: math.pi,
+    fragmentsNum: 24,
   );
 }
