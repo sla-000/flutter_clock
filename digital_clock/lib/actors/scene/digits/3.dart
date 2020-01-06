@@ -1,36 +1,46 @@
+import 'dart:math' as math;
+
 import 'package:digital_clock/actors/scene/digits/utils.dart';
 import 'package:digital_clock/actors/scene/scene.dart';
 import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/vector.dart';
 
 void set3(List<Actor> children) {
-  mannaLine(
+  Vector end = mannaCurve(
     children: children,
-    startPosition: Vector(x: 200, y: 200),
-    endPosition: Vector(x: kSizeX - 200, y: 200),
+    startPosition: Vector(x: 220, y: 300),
+    startAngle: 10 / 6 * math.pi,
+    totalDeltaAngle: 5 / 6 * math.pi,
+    fragmentsNum: 16,
   );
 
-  mannaLine(
+  end = mannaCurve(
     children: children,
-    startPosition: Vector(x: kSizeX - 200, y: 200),
-    endPosition: Vector(x: kSizeX / 2, y: kSizeY / 2),
+    startPosition: end,
+    startAngle: 3 / 6 * math.pi,
+    totalDeltaAngle: 3 / 6 * math.pi,
+    fragmentsNum: 10,
   );
 
-  mannaLine(
+  end = mannaCurve(
     children: children,
-    startPosition: Vector(x: kSizeX / 2, y: kSizeY / 2),
-    endPosition: Vector(x: kSizeX - 200, y: kSizeY / 2),
+    startPosition: end,
+    startAngle: 12 / 6 * math.pi,
+    totalDeltaAngle: 3 / 6 * math.pi,
+    fragmentsNum: 12,
   );
 
-  mannaLine(
+  end = mannaLine(
     children: children,
-    startPosition: Vector(x: kSizeX - 200, y: kSizeY / 2),
-    endPosition: Vector(x: kSizeX - 200, y: kSizeY - 200),
+    startPosition: end,
+    endPosition: Vector.copy(end)..y = kSizeY - 500,
   );
 
-  mannaLine(
+  end = mannaCurve(
     children: children,
-    startPosition: Vector(x: kSizeX - 200, y: kSizeY - 200),
-    endPosition: Vector(x: 200, y: kSizeY - 200),
+    startPosition: end,
+    startAngle: 3 / 6 * math.pi,
+    totalDeltaAngle: 5 / 6 * math.pi,
+    fragmentsNum: 17,
   );
 }

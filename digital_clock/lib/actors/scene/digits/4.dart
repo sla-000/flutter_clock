@@ -12,11 +12,17 @@ void set4(List<Actor> children) {
     endPosition: Vector(x: kSizeX - 200, y: kSizeY - 200),
   );
 
+  Vector end = mannaLine(
+    children: children,
+    startPosition: Vector(x: 200, y: 200),
+    endPosition: Vector(x: 200, y: kSizeY / 2),
+  );
+
   mannaCurve(
     children: children,
-    startPosition: Vector(x: 220, y: 200),
-    startAngle: 1.2 / 2 * math.pi,
-    totalDeltaAngle: -1.2 / 2 * math.pi,
-    fragmentsNum: 22,
+    startPosition: end,
+    startAngle: 1 / 6 * math.pi,
+    totalDeltaAngle: -2 / 6 * math.pi,
+    fragmentsNum: 13,
   );
 }

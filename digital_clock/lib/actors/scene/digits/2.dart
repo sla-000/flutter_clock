@@ -8,26 +8,23 @@ import 'package:digital_clock/engine/vector.dart';
 void set2(List<Actor> children) {
   Vector end = mannaCurve(
     children: children,
-    startPosition: Vector(x: 200, y: 270),
-    startAngle: 7 / 4 * math.pi,
+    startPosition: Vector(x: 200, y: 340),
+    startAngle: 10 / 6 * math.pi,
     totalDeltaAngle: math.pi,
-    fragmentsNum: 24,
+    fragmentsNum: 21,
   );
 
   end = mannaLine(
     children: children,
     startPosition: end,
-    endPosition: Vector(
-      x: kSizeX - end.x,
-      y: kSizeY - end.y,
-    ),
+    endPosition: Vector(x: 200, y: kSizeY - 200),
   );
 
   mannaCurve(
     children: children,
     startPosition: end,
-    startAngle: 3 / 4 * math.pi,
-    totalDeltaAngle: -math.pi,
-    fragmentsNum: 24,
+    startAngle: 11.5 / 6 * math.pi,
+    totalDeltaAngle: 1 / 6 * math.pi,
+    fragmentsNum: 13,
   );
 }
