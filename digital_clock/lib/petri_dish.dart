@@ -213,14 +213,22 @@ class PetriPainter extends CustomPainter {
     Visible.draw(canvas, scene);
 
     Future<void>(() async {
-      if (delta != 0) {
-        await compute(
-            updateScene, SceneArguments(scene: scene, delta: delta.toDouble()));
-//      scene.update(scene, delta.toDouble());
+      try {
+        if (delta != 0) {
+          await compute(
+            updateScene,
+            SceneArguments(scene: scene, delta: delta.toDouble()),
+            debugLabel: 'qweweqqqwewq',
+          );
+        }
+      } catch (error) {
+        _log.severe(() => 'paint: error=${error.toString()}');
+      } finally {
+        updateDisplay.add(null);
       }
-
-      updateDisplay.add(null);
     });
+
+//      scene.update(scene, delta.toDouble());
   }
 
   @override
@@ -239,6 +247,13 @@ class SceneArguments {
   double delta;
 }
 
+int counter = 0;
+
 void updateScene(SceneArguments args) {
+  if (counter++ > 300) {
+    counter = 0;
+    _log.finest(() => 'updateScene: args=$args');
+  }
+
   args.scene.update(args.scene, args.delta);
 }
