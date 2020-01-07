@@ -217,7 +217,7 @@ class PetriPainter extends CustomPainter {
         if (delta != 0) {
           await compute(
             updateScene,
-            SceneArguments(scene: scene, delta: delta.toDouble()),
+            {'scene': scene, 'delta': delta},
             debugLabel: 'qweweqqqwewq',
           );
         }
@@ -237,23 +237,16 @@ class PetriPainter extends CustomPainter {
   }
 }
 
-class SceneArguments {
-  SceneArguments({
-    this.scene,
-    this.delta,
-  });
-
-  Actor scene;
-  double delta;
-}
-
 int counter = 0;
 
-void updateScene(SceneArguments args) {
+void updateScene(Map<String, dynamic> map) {
   if (counter++ > 300) {
     counter = 0;
-    _log.finest(() => 'updateScene: args=$args');
+    _log.finest(() => 'updateScene: map=$map');
   }
 
-  args.scene.update(args.scene, args.delta);
+  final Actor scene = map['scene'];
+  final double delta = map['delta'].toDouble();
+
+  scene.update(scene, delta);
 }
