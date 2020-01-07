@@ -12,6 +12,7 @@ import 'package:digital_clock/actors/scene/digits/9.dart';
 import 'package:digital_clock/actors/scene/digits/manna.dart';
 import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/vector.dart';
+import 'package:flutter/painting.dart';
 import 'package:logging/logging.dart';
 
 final Logger _log = Logger('Scene')..level = Level.FINEST;
@@ -24,7 +25,6 @@ class Scene extends Actor {
       : super(
           position: Vector.zero(),
           size: Vector(x: kSizeX, y: kSizeY),
-          image: null,
         ) {
     initCells(children);
   }
@@ -50,4 +50,8 @@ class Scene extends Actor {
 
     digit2func[digit](children);
   }
+}
+
+void drawScene(Canvas canvas, Actor actor) {
+  return;
 }

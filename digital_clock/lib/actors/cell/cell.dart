@@ -4,6 +4,7 @@ import 'package:digital_clock/actors/cell/eye.dart';
 import 'package:digital_clock/actors/cell/tail.dart';
 import 'package:digital_clock/actors/life/life.dart';
 import 'package:digital_clock/actors/scene/digits/manna.dart';
+import 'package:digital_clock/config.dart';
 import 'package:digital_clock/engine/actor.dart';
 import 'package:digital_clock/engine/math.dart';
 import 'package:digital_clock/engine/vector.dart';
@@ -29,7 +30,6 @@ class Cell extends Actor {
           angle: angle,
           velocityModule: velocity ?? 100,
           velocityAngle: velocityAngle ?? 0.5,
-          image: Assets.instance.bodyImage,
         ) {
     angle ??= 0;
 
@@ -57,19 +57,11 @@ class Cell extends Actor {
   /// 1-total fade out, 0-normal
   double fade = 0;
 
-  void setTired(double tire) {
-    final int greenAlpha = ((1 - tire) * 0x80 + 0x7F).floor();
-    colorFilter = ColorFilter.mode(
-        Color(0xFF81C784).withAlpha(greenAlpha), BlendMode.modulate);
-
-    eye.setTired(fade);
-  }
-
   @override
   void update(Actor root, double millis) {
     life.live(root, this, millis);
 
-    setTired(fade);
+    eye.fade = fade;
 
     _approachManna(root);
 
@@ -188,4 +180,27 @@ class Cell extends Actor {
   double getCollideResultVectorAngle(Cell cell) {
     return getVectorAngle(deltaVector(cell));
   }
+}
+
+void drawCell(Canvas canvas, Actor actor) {
+  final Cell _actor = actor;
+
+  final int greenAlpha = ((1 - _actor.fade) * 0x80 + 0x7F).floor();
+
+  ColorFilter colorFilter = ColorFilter.mode(
+    const Color(0xFF81C784).withAlpha(greenAlpha),
+    BlendMode.modulate,
+  );
+
+  return paintImage(
+    canvas: canvas,
+    rect: Rect.fromCenter(
+      center: Offset.zero,
+      width: actor.size.x,
+      height: actor.size.y,
+    ),
+    colorFilter: colorFilter,
+    filterQuality: Config.instance.filterQuality,
+    image: Assets.instance.bodyImage,
+  );
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:digital_clock/actors/cell/cell.dart';
+import 'package:digital_clock/actors/init.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
@@ -62,6 +63,7 @@ class _PetriDishState extends State<PetriDish> {
         }
 
         scene ??= Scene();
+        initBeforeDrawActors();
 
         if (widget.valueNotifier.value != null) {
           scene.setDigit(widget.valueNotifier.value);
@@ -207,7 +209,7 @@ class PetriPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    scene.draw(canvas);
+    Visible.draw(canvas, scene);
 
     Future<void>(() {
       if (delta != 0) {

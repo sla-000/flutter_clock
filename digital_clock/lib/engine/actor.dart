@@ -1,7 +1,5 @@
 import 'dart:math' as math;
-import 'dart:ui' as ui;
 
-import 'package:digital_clock/config.dart';
 import 'package:digital_clock/engine/math.dart';
 import 'package:digital_clock/engine/vector.dart';
 import 'package:flutter/foundation.dart';
@@ -17,7 +15,7 @@ abstract class Draw {
 
 const double _kRotationSpeed = 0.5 * 2 * math.pi; // rad in second
 
-abstract class Actor implements Update, Draw {
+abstract class Actor implements Update {
   Actor({
     @required this.position,
     @required this.size,
@@ -26,8 +24,6 @@ abstract class Actor implements Update, Draw {
     this.angle,
     this.velocityModule,
     this.velocityAngle,
-    this.colorFilter,
-    this.image,
   }) {
     scale ??= Vector.one();
     pivot ??= Vector(x: size.x / 2, y: size.y / 2);
@@ -43,9 +39,6 @@ abstract class Actor implements Update, Draw {
   double angle;
   double velocityModule;
   double velocityAngle;
-  ColorFilter colorFilter;
-  ui.Image image;
-  Offset acceleration;
 
   double maxRotationSpeed = _kRotationSpeed;
 
@@ -66,39 +59,6 @@ abstract class Actor implements Update, Draw {
     for (final Actor actor in tempActors) {
       actor.update(root, millis);
     }
-  }
-
-  @override
-  void draw(Canvas canvas) {
-    canvas.save();
-
-    canvas.translate(position.x, position.y);
-
-    canvas.rotate(angle);
-
-    canvas.scale(scale.x ?? 1, scale.y ?? 1);
-
-    if (image != null) {
-      paintImage(
-        canvas: canvas,
-        rect: Rect.fromCenter(
-          center: Offset.zero,
-          width: size.x,
-          height: size.y,
-        ),
-        colorFilter: colorFilter,
-        filterQuality: Config.instance.filterQuality,
-        image: image,
-      );
-    }
-
-    final List<Actor> tempActors = List<Actor>.of(children, growable: false);
-
-    for (final Actor actor in tempActors) {
-      actor.draw(canvas);
-    }
-
-    canvas.restore();
   }
 
   Vector deltaVector(Actor otherActor) {
@@ -143,5 +103,40 @@ abstract class Actor implements Update, Draw {
         'scale: $scale, '
         'angle: $angle, '
         'children: $children}';
+  }
+}
+
+typedef DrawActor = void Function(Canvas canvas, Actor actor);
+
+class Visible {
+  Visible._init();
+
+  static Visible get instance => Visible._init();
+
+  static final Map<Type, DrawActor> _type2Body = <Type, DrawActor>{};
+
+  void add<T>(DrawActor drawActor) {
+    _type2Body[T] = drawActor;
+  }
+
+  static void draw(Canvas canvas, Actor actor) {
+    canvas.save();
+
+    canvas.translate(actor.position.x, actor.position.y);
+
+    canvas.rotate(actor.angle);
+
+    canvas.scale(actor.scale.x ?? 1, actor.scale.y ?? 1);
+
+    _type2Body[actor.runtimeType](canvas, actor);
+
+    final List<Actor> tempActors =
+        List<Actor>.of(actor.children, growable: false);
+
+    for (final Actor child in tempActors) {
+      draw(canvas, child);
+    }
+
+    canvas.restore();
   }
 }
