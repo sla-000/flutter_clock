@@ -104,7 +104,7 @@ class Life {
 
   void _fade(Cell cell) {
     if (_ageMillis > kGrandfatherAge) {
-      cell.fade = normalize(_ageMillis, kGrandfatherAge, kMaxAge);
+      cell.tired = normalize(_ageMillis, kGrandfatherAge, kMaxAge);
     }
   }
 

@@ -34,6 +34,7 @@ class Vector {
       );
 
   Vector operator *(double value) => Vector(x: x * value, y: y * value);
+
   Vector operator /(double value) => Vector(x: x / value, y: y / value);
 
   Vector operator -(Vector value) => Vector(x: x - value.x, y: y - value.y);

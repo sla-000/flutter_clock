@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:digital_clock/actors/cell/body.dart';
 import 'package:digital_clock/actors/cell/eye.dart';
 import 'package:digital_clock/actors/cell/tail.dart';
 import 'package:digital_clock/actors/life/life.dart';
@@ -10,7 +11,6 @@ import 'package:digital_clock/engine/vector.dart';
 import 'package:digital_clock/utils/assets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:logging/logging.dart';
 
 final Logger _log = Logger('Cell')..level = Level.FINEST;
@@ -39,6 +39,9 @@ class Cell extends Actor {
     );
     children.add(tail);
 
+    body = Body();
+    children.add(body);
+
     eye = Eye(
       position: Vector(x: 8, y: 0),
       scale: Vector(x: 1.2 / this.scale.x + 0.8, y: 1.2 / this.scale.y + 0.8),
@@ -48,6 +51,8 @@ class Cell extends Actor {
     life = Life();
   }
 
+  Body body;
+
   Eye eye;
 
   Tail tail;
@@ -55,21 +60,14 @@ class Cell extends Actor {
   Life life;
 
   /// 1-total fade out, 0-normal
-  double fade = 0;
-
-  void setTired(double tire) {
-    final int greenAlpha = ((1 - tire) * 0x80 + 0x7F).floor();
-    colorFilter = ColorFilter.mode(
-        Color(0xFF81C784).withAlpha(greenAlpha), BlendMode.modulate);
-
-    eye.setTired(fade);
-  }
+  double tired = 0;
 
   @override
   void update(Actor root, double millis) {
     life.live(root, this, millis);
 
-    setTired(fade);
+    body.setTired(tired);
+    eye.setTired(tired);
 
     _approachManna(root);
 
