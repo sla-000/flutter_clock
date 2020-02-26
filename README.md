@@ -1,15 +1,5 @@
-# Flutter Clock
+# Flutter Clock - Conway Life game
 
-Welcome to Flutter Clock!
+I made this clock for [Flutter clock contest](https://flutter.dev/clock).
 
-See [flutter.dev/clock](https://flutter.dev/clock) for how to get started, submission requirements, contest rules, and FAQs.
-
-See a [live demo](https://maryx.github.io/flutter_clock) with Flutter for Web!
-
-Example [Analog Clock](analog_clock)
-
-<img src='analog_clock/analog.gif' width='350'>
-
-Example [Digital Clock](digital_clock)
-
-<img src='digital_clock/digital.gif' width='350'>
+[![Watch the video](https://img.youtube.com/vi/6Ybu-pfMbxU/maxresdefault.jpg)](https://youtu.be/6Ybu-pfMbxU)
